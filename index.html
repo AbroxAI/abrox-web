@@ -10,102 +10,102 @@
         margin: 0;
         padding: 0;
         font-family: "Poppins", Arial, sans-serif;
-        background: radial-gradient(circle at bottom, #02030D, #000108 70%);
+        background: #02020A;
         height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
         color: white;
+        position: relative;
     }
 
-    /* ★ floating neon stars ★ */
+    /* ★ stronger floating blobs */
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.55;
+        animation: floatBlob 12s infinite ease-in-out alternate;
+    }
+
+    .blob1 {
+        width: 520px;
+        height: 520px;
+        background: rgba(255, 0, 255, 0.7);
+        top: -120px;
+        left: -120px;
+        animation-delay: 0s;
+    }
+
+    .blob2 {
+        width: 480px;
+        height: 480px;
+        background: rgba(0, 255, 255, 0.7);
+        bottom: -130px;
+        right: -150px;
+        animation-delay: 2s;
+    }
+
+    @keyframes floatBlob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        100% { transform: translate(40px, 50px) scale(1.2); }
+    }
+
+    /* ★ floating neon stars (now moving) */
+    @keyframes starFloat {
+        0% { transform: translateY(0px) translateX(0px); opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-60px) translateX(30px); opacity: 0.4; }
+    }
+
     .star {
         position: absolute;
-        width: 3px;
-        height: 3px;
-        background: rgba(255,255,255,0.9);
+        width: 4px;
+        height: 4px;
+        background: white;
         border-radius: 50%;
-        box-shadow: 0 0 6px rgba(0,255,255,0.8);
-        animation: twinkle 3s infinite ease-in-out alternate;
+        box-shadow: 0 0 10px #00eaff;
+        animation: starFloat 6s infinite ease-in-out alternate;
     }
 
-    @keyframes twinkle {
-        0% { opacity: 0.2; transform: scale(0.6); }
-        100% { opacity: 1; transform: scale(1.2); }
-    }
-
-    /* ★ drifting particles */
-    .particle {
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255,0,255,0.45);
-        filter: blur(4px);
-        animation: drift 12s infinite linear;
-    }
-
-    @keyframes drift {
-        0% { transform: translateY(120vh) translateX(0); opacity: 0; }
-        20% { opacity: 0.8; }
-        100% { transform: translateY(-20vh) translateX(80px); opacity: 0; }
-    }
-
-    /* Large neon gradient glow */
-    .neonGlow {
-        position: absolute;
-        width: 900px;
-        height: 900px;
-        background: radial-gradient(circle, rgba(255,0,255,0.25), rgba(0,0,0,0));
-        filter: blur(160px);
-        top: -250px;
-        right: -250px;
-        animation: pulse 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.25; }
-        100% { transform: scale(1.2); opacity: 0.55; }
-    }
-
-    /* Premium blurred glass login box */
+    /* ★ Premium Login Box */
     .container {
         width: 90%;
         max-width: 420px;
-        background: rgba(0, 0, 0, 0.32);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 22px;
         padding: 40px;
-        backdrop-filter: blur(16px);
-        box-shadow: 0 0 35px rgba(255,0,255,0.22), 0 0 45px rgba(0,255,255,0.12);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 0 35px rgba(255,0,255,0.25), 0 0 45px rgba(0,255,255,0.18);
         z-index: 10;
-        animation: fadeUp 1.3s ease;
+        animation: fadeUp 1.2s ease;
     }
 
     @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(25px); }
+        from { opacity: 0; transform: translateY(35px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
         text-align: center;
-        font-size: 32px;
-        margin-bottom: 25px;
+        font-size: 34px;
+        margin-bottom: 30px;
         font-weight: 700;
         background: linear-gradient(90deg, #00F6FF, #4AFFFF, #00CFFF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 14px #00eaff;
+        text-shadow: 0 0 18px #00eaff;
     }
 
     input {
         width: 100%;
         padding: 16px;
         margin-top: 18px;
-        background: rgba(10, 12, 25, 0.7);
+        background: rgba(10, 12, 25, 0.72);
         border-radius: 12px;
-        border: 1px solid rgba(0,255,255,0.35);
+        border: 1px solid rgba(0,255,255,0.45);
         color: white;
         font-size: 16px;
         outline: none;
@@ -128,7 +128,7 @@
         font-size: 20px;
         font-weight: bold;
         cursor: pointer;
-        box-shadow: 0 0 25px #FF00F590, inset 0 0 10px rgba(255,255,255,0.15);
+        box-shadow: 0 0 30px #FF00F590;
         transition: 0.25s;
     }
 
@@ -159,25 +159,20 @@
 
 <body>
 
-<div class="neonGlow"></div>
+<!-- GLOW BLOBS -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
 
-<!-- generate floating stars -->
+<!-- Floating Stars Generator -->
 <script>
-for (let i = 0; i < 70; i++) {
+for (let i = 0; i < 85; i++) {
     let star = document.createElement("div");
     star.className = "star";
     star.style.top = Math.random() * 100 + "vh";
     star.style.left = Math.random() * 100 + "vw";
-    star.style.animationDuration = (2 + Math.random() * 3) + "s";
+    star.style.animationDuration = (4 + Math.random() * 6) + "s";
+    star.style.animationDelay = Math.random() * 3 + "s";
     document.body.appendChild(star);
-}
-
-for (let i = 0; i < 25; i++) {
-    let p = document.createElement("div");
-    p.className = "particle";
-    p.style.left = Math.random() * 100 + "vw";
-    p.style.animationDelay = Math.random() * 8 + "s";
-    document.body.appendChild(p);
 }
 </script>
 
