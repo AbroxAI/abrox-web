@@ -4,79 +4,149 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Abrox AI — Secure Login</title>
+
 <style>
     body {
         margin: 0;
         padding: 0;
-        background: #0a0f24;
-        font-family: Arial, sans-serif;
-        color: white;
+        font-family: "Poppins", Arial, sans-serif;
+        background: radial-gradient(circle at top, #08102D, #02030F);
+        color: #fff;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        padding-top: 40px;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* Glowing floating blobs */
+    .glow1 {
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        background: #8e2de2;
+        filter: blur(170px);
+        opacity: 0.45;
+        top: -120px;
+        right: -100px;
+        animation: float1 6s ease-in-out infinite alternate;
+    }
+
+    .glow2 {
+        position: absolute;
+        width: 380px;
+        height: 380px;
+        background: #00eaff;
+        filter: blur(180px);
+        opacity: 0.35;
+        bottom: -130px;
+        left: -110px;
+        animation: float2 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes float1 {
+        from { transform: translate(0px, 0px); }
+        to { transform: translate(0px, 35px); }
+    }
+
+    @keyframes float2 {
+        from { transform: translate(0px, 0px); }
+        to { transform: translate(0px, -35px); }
     }
 
     .container {
         width: 90%;
         max-width: 420px;
-        background: #11182f;
-        padding: 25px;
-        border-radius: 14px;
-        box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+        background: rgba(15, 20, 40, 0.8);
+        padding: 35px;
+        border-radius: 20px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+        position: relative;
+        z-index: 10;
+        animation: fadeUp 1.3s ease;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
+        font-size: 28px;
         text-align: center;
-        margin-bottom: 20px;
-        color: #4CC9F0;
+        margin-bottom: 25px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #00eaff, #8e2de2, #ff00ea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     input {
         width: 100%;
-        padding: 14px;
-        margin-top: 14px;
-        border-radius: 8px;
-        border: none;
+        padding: 15px;
+        margin-top: 18px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(0,255,255,0.45);
+        border-radius: 12px;
+        color: #fff;
         font-size: 16px;
         outline: none;
+        transition: 0.25s;
+    }
+
+    input:focus {
+        border-color: #ff00ea;
+        box-shadow: 0 0 15px #ff00ea70;
     }
 
     button {
         width: 100%;
-        padding: 14px;
-        margin-top: 20px;
-        background: #4361EE;
+        padding: 17px;
+        margin-top: 28px;
+        background: linear-gradient(90deg, #ff00ea, #8e2de2);
         border: none;
-        border-radius: 8px;
+        border-radius: 14px;
         color: white;
-        font-size: 18px;
-        cursor: pointer;
+        font-size: 20px;
         font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 22px #ff00ea80;
+        transition: 0.25s;
     }
 
     button:hover {
-        background: #3b54d3;
+        transform: scale(1.04);
+        box-shadow: 0 0 35px #ff00eaaa;
+    }
+
+    .error, .success {
+        margin-top: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        display: none;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 500;
     }
 
     .error {
-        margin-top: 15px;
-        padding: 10px;
-        background: #d62828;
-        border-radius: 6px;
-        display: none;
+        background: rgba(255, 0, 0, 0.5);
+        box-shadow: 0 0 12px #ff000066;
     }
 
     .success {
-        margin-top: 15px;
-        padding: 10px;
-        background: #2a9d8f;
-        border-radius: 6px;
-        display: none;
+        background: rgba(0, 255, 150, 0.45);
+        box-shadow: 0 0 12px #00ff9970;
     }
 </style>
 </head>
+
 <body>
+
+<!-- Neon glow background -->
+<div class="glow1"></div>
+<div class="glow2"></div>
 
 <div class="container">
     <h2>Abrox AI Login</h2>
@@ -84,7 +154,7 @@
     <input id="uidInput" type="text" placeholder="Enter your UID">
     <input id="passInput" type="password" placeholder="Dashboard Password">
 
-    <button onclick="verify()">Login</button>
+    <button onclick="verify()">LOGIN</button>
 
     <div id="errorBox" class="error"></div>
     <div id="successBox" class="success"></div>
@@ -105,36 +175,24 @@ async function verify() {
     errorBox.style.display = "none";
     successBox.style.display = "none";
 
-    if (!uid || !pass) {
-        error("Please enter UID and Password");
-        return;
-    }
+    if (!uid || !pass) return error("Please enter UID and Password");
 
     try {
         const subs = await fetch(SUBSCRIBERS_URL).then(r => r.json());
-
-        if (!subs[uid]) {
-            return error("UID not found in system.");
-        }
+        if (!subs[uid]) return error("UID not found.");
 
         const envText = await fetch(ENV_URL).then(r => r.text());
         const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-
         if (!match) return error("Password configuration missing.");
 
         const correctPass = match[1].trim();
-
-        if (pass !== correctPass) {
-            return error("Incorrect dashboard password.");
-        }
+        if (pass !== correctPass) return error("Incorrect password.");
 
         success("Login successful! Redirecting...");
-        setTimeout(() => {
-            window.location.href = `${DASHBOARD_URL}?uid=${uid}`;
-        }, 1200);
+        setTimeout(() => { window.location.href = `${DASHBOARD_URL}?uid=${uid}`; }, 1200);
 
-    } catch (e) {
-        error("Connection error. Ensure GitHub files are public.");
+    } catch {
+        error("Connection error. Check GitHub file permissions.");
     }
 }
 
@@ -143,7 +201,6 @@ function error(msg) {
     box.innerHTML = msg;
     box.style.display = "block";
 }
-
 function success(msg) {
     const box = document.getElementById("successBox");
     box.innerHTML = msg;
