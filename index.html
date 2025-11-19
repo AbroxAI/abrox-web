@@ -91,20 +91,9 @@
 </div>
 
 <script>
-/* ---------------------------
-   SETTINGS — NOW CONFIGURED
-   --------------------------- */
-
-// Your GitHub files
 const SUBSCRIBERS_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json";
 const ENV_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env";
-
-// Redirect on success
 const DASHBOARD_URL = "dashboard.html";
-
-/* ---------------------------
-       LOGIN FUNCTION
-   --------------------------- */
 
 async function verify() {
     const uid = document.getElementById("uidInput").value.trim();
@@ -122,30 +111,23 @@ async function verify() {
     }
 
     try {
-
-        // Fetch subscribers.json from GitHub
         const subs = await fetch(SUBSCRIBERS_URL).then(r => r.json());
 
         if (!subs[uid]) {
             return error("UID not found in system.");
         }
 
-        // Fetch .env content
         const envText = await fetch(ENV_URL).then(r => r.text());
-
         const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-        if (!match) {
-            return error("Password configuration missing.");
-        }
+
+        if (!match) return error("Password configuration missing.");
 
         const correctPass = match[1].trim();
 
-        // Validate password
         if (pass !== correctPass) {
             return error("Incorrect dashboard password.");
         }
 
-        // Success
         success("Login successful! Redirecting...");
         setTimeout(() => {
             window.location.href = `${DASHBOARD_URL}?uid=${uid}`;
@@ -153,13 +135,8 @@ async function verify() {
 
     } catch (e) {
         error("Connection error. Ensure GitHub files are public.");
-        console.error(e);
     }
 }
-
-/* ---------------------------
-       UI HELPERS
-   --------------------------- */
 
 function error(msg) {
     const box = document.getElementById("errorBox");
