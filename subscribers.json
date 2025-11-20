@@ -1,1 +1,8 @@
-{ "event": "new_registration", "full_name": "Giftolise olise", "country": "🇺🇸 USA", "broker": "Quotex", "uid": "69519079" }
+{
+  "event": "new_registration",
+  "user_id": "1873482554",
+  "full_name": "shyfr \u262c",
+  "country": "\ud83c\uddfa\ud83c\uddf8 USA",
+  "broker": "Pocket Option",
+  "uid": "24578899"
+}
