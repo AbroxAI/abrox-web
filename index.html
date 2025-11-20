@@ -1,138 +1,242 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABROX AI — Login</title>
+<title>Abrox AI — Secure Login</title>
 
 <style>
     body {
         margin: 0;
         padding: 0;
-        background: #010208;
-        height: 100dvh; /* FIX for mobile browsers */
-        font-family: "Poppins", sans-serif;
-        position: relative;
-        color: white;
+        font-family: "Poppins", Arial, sans-serif;
+        background: #02020A;
+        height: 100vh;
         display: flex;
         justify-content: center;
-        align-items: center; /* Center perfectly */
+        align-items: center;
+        overflow: hidden;
+        color: white;
+        position: relative;
     }
 
-    /* ============================
-       RESPONSIVE MOVING CANDLES
-    ============================ */
-    .bg-candles {
+    /* ★ stronger floating blobs */
+    .blob {
         position: absolute;
-        inset: 0;
-        background-image: url('https://i.imgur.com/CKQxRsv.png');
-        background-repeat: repeat;
-        background-size: 900px auto; /* FIX: Fits all screens */
-        opacity: 0.22;
-        filter: brightness(1.08);
-        animation: slideCandles 40s linear infinite;
-        z-index: 0;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.55;
+        animation: floatBlob 12s infinite ease-in-out alternate;
     }
 
-    @keyframes slideCandles {
-        from { background-position: 0 0; }
-        to { background-position: -1200px 0; }
+    .blob1 {
+        width: 520px;
+        height: 520px;
+        background: rgba(255, 0, 255, 0.7);
+        top: -120px;
+        left: -120px;
+        animation-delay: 0s;
     }
 
-    /* ============================
-       CENTERED LOGIN UI
-    ============================ */
-    .login-box {
-        z-index: 2;
-        width: 92%;
-        max-width: 380px;
-        padding: 32px;
-        background: rgba(0, 0, 0, 0.55);
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.12);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 0 35px #00eaff35;
-        text-align: center;
-        animation: fadeUp 1s ease;
+    .blob2 {
+        width: 480px;
+        height: 480px;
+        background: rgba(0, 255, 255, 0.7);
+        bottom: -130px;
+        right: -150px;
+        animation-delay: 2s;
+    }
+
+    @keyframes floatBlob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        100% { transform: translate(40px, 50px) scale(1.2); }
+    }
+
+    /* ★ floating neon stars (now moving) */
+    @keyframes starFloat {
+        0% { transform: translateY(0px) translateX(0px); opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-60px) translateX(30px); opacity: 0.4; }
+    }
+
+    .star {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #00eaff;
+        animation: starFloat 6s infinite ease-in-out alternate;
+    }
+
+    /* ★ Premium Login Box */
+    .container {
+        width: 90%;
+        max-width: 420px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 22px;
+        padding: 40px;
+        backdrop-filter: blur(18px);
+        box-shadow: 0 0 35px rgba(255,0,255,0.25), 0 0 45px rgba(0,255,255,0.18);
+        z-index: 10;
+        animation: fadeUp 1.2s ease;
     }
 
     @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(25px); }
+        from { opacity: 0; transform: translateY(35px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .login-box h2 {
-        background: linear-gradient(90deg, #00eaff, #b400ff);
+    h2 {
+        text-align: center;
+        font-size: 34px;
+        margin-bottom: 30px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #00F6FF, #4AFFFF, #00CFFF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 28px;
-        margin-bottom: 25px;
-        text-shadow: 0 0 20px #00eaff40;
+        text-shadow: 0 0 18px #00eaff;
     }
 
     input {
         width: 100%;
-        padding: 15px;
-        margin-top: 15px;
-        background: rgba(12, 12, 30, 0.7);
-        border: 1px solid #00eaff80;
+        padding: 16px;
+        margin-top: 18px;
+        background: rgba(10, 12, 25, 0.72);
         border-radius: 12px;
+        border: 1px solid rgba(0,255,255,0.45);
         color: white;
-        font-size: 15px;
+        font-size: 16px;
         outline: none;
+        transition: 0.25s;
+    }
+
+    input:focus {
+        border-color: #FF00F5;
+        box-shadow: 0 0 20px #ff00f570;
     }
 
     button {
         width: 100%;
-        padding: 15px;
-        margin-top: 22px;
-        font-size: 18px;
-        background: linear-gradient(90deg, #00eaff, #b400ff);
+        padding: 17px;
+        margin-top: 28px;
+        background: linear-gradient(90deg, #FF00F5, #B400FF);
         border: none;
         border-radius: 14px;
         color: white;
-        cursor: pointer;
+        font-size: 20px;
         font-weight: bold;
-        box-shadow: 0 0 25px #00eaff60;
+        cursor: pointer;
+        box-shadow: 0 0 30px #FF00F590;
+        transition: 0.25s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px #FF00F5DD;
+    }
+
+    .error, .success {
+        margin-top: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        display: none;
+        text-align: center;
+    }
+
+    .error {
+        background: rgba(255, 0, 0, 0.45);
+        box-shadow: 0 0 12px #ff000066;
+    }
+
+    .success {
+        background: rgba(0, 255, 150, 0.45);
+        box-shadow: 0 0 12px #00ff9970;
     }
 </style>
 </head>
 
 <body>
 
-<div class="bg-candles"></div>
+<!-- GLOW BLOBS -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
 
-<div class="login-box">
+<!-- Floating Stars Generator -->
+<script>
+for (let i = 0; i < 85; i++) {
+    let star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 100 + "vh";
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.animationDuration = (4 + Math.random() * 6) + "s";
+    star.style.animationDelay = Math.random() * 3 + "s";
+    document.body.appendChild(star);
+}
+</script>
+
+<div class="container">
     <h2>Abrox AI Login</h2>
+
     <input id="uidInput" type="text" placeholder="Enter your UID">
     <input id="passInput" type="password" placeholder="Dashboard Password">
+
     <button onclick="verify()">LOGIN</button>
+
+    <div id="errorBox" class="error"></div>
+    <div id="successBox" class="success"></div>
 </div>
 
 <script>
+const SUBSCRIBERS_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json";
+const ENV_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env";
+const DASHBOARD_URL = "dashboard.html";
+
 async function verify() {
     const uid = document.getElementById("uidInput").value.trim();
     const pass = document.getElementById("passInput").value.trim();
 
-    if (!uid || !pass) return alert("Enter UID and Password");
+    const errorBox = document.getElementById("errorBox");
+    const successBox = document.getElementById("successBox");
+
+    errorBox.style.display = "none";
+    successBox.style.display = "none";
+
+    if (!uid || !pass) return error("Please enter UID and Password");
 
     try {
-        const subs = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json").then(r => r.json());
-        if (!subs[uid]) return alert("UID not found.");
+        const subs = await fetch(SUBSCRIBERS_URL).then(r => r.json());
+        if (!subs[uid]) return error("UID not found.");
 
-        const envText = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env").then(r => r.text());
+        const envText = await fetch(ENV_URL).then(r => r.text());
         const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
+        if (!match) return error("Password configuration missing.");
 
-        if (!match) return alert("Password config missing.");
-        if (pass !== match[1].trim()) return alert("Incorrect password.");
+        const correctPass = match[1].trim();
+        if (pass !== correctPass) return error("Incorrect password.");
 
-        window.location.href = "dashboard.html?uid=" + uid;
+        success("Login successful! Redirecting...");
+        setTimeout(() => { window.location.href = `${DASHBOARD_URL}?uid=${uid}`; }, 1200);
 
     } catch {
-        alert("Connection error.");
+        error("Connection error. Check GitHub file privacy.");
     }
+}
+
+function error(msg) {
+    const box = document.getElementById("errorBox");
+    box.innerHTML = msg;
+    box.style.display = "block";
+}
+function success(msg) {
+    const box = document.getElementById("successBox");
+    box.innerHTML = msg;
+    box.style.display = "block";
 }
 </script>
 
 </body>
 </html>
+
