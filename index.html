@@ -10,56 +10,54 @@
         margin: 0;
         padding: 0;
         background: #010208;
-        overflow: hidden;
-        height: 100vh;
+        height: 100dvh; /* FIX for mobile browsers */
         font-family: "Poppins", sans-serif;
         position: relative;
         color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center perfectly */
     }
 
     /* ============================
-       ONLY CLEAN CANDLE BACKGROUND
+       RESPONSIVE MOVING CANDLES
     ============================ */
-
     .bg-candles {
         position: absolute;
         inset: 0;
         background-image: url('https://i.imgur.com/CKQxRsv.png');
         background-repeat: repeat;
-        background-size: 1600px auto;
-        opacity: 0.25;
-        filter: brightness(1.1);
-        animation: slideCandles 60s linear infinite;
+        background-size: 900px auto; /* FIX: Fits all screens */
+        opacity: 0.22;
+        filter: brightness(1.08);
+        animation: slideCandles 40s linear infinite;
+        z-index: 0;
     }
 
     @keyframes slideCandles {
         from { background-position: 0 0; }
-        to { background-position: -2000px 0; }
+        to { background-position: -1200px 0; }
     }
 
     /* ============================
-       LOGIN CARD UI
+       CENTERED LOGIN UI
     ============================ */
-
     .login-box {
         z-index: 2;
-        position: relative;
-        width: 90%;
-        max-width: 400px;
-        margin: auto;
-        margin-top: 60px;
-        padding: 35px;
+        width: 92%;
+        max-width: 380px;
+        padding: 32px;
         background: rgba(0, 0, 0, 0.55);
-        border-radius: 22px;
+        border-radius: 20px;
         border: 1px solid rgba(255,255,255,0.12);
         backdrop-filter: blur(12px);
         box-shadow: 0 0 35px #00eaff35;
         text-align: center;
-        animation: fadeUp 1.2s ease;
+        animation: fadeUp 1s ease;
     }
 
     @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(40px); }
+        from { opacity: 0; transform: translateY(25px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
@@ -67,28 +65,28 @@
         background: linear-gradient(90deg, #00eaff, #b400ff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 34px;
-        margin-bottom: 30px;
-        text-shadow: 0 0 18px #00eaff55;
+        font-size: 28px;
+        margin-bottom: 25px;
+        text-shadow: 0 0 20px #00eaff40;
     }
 
     input {
         width: 100%;
         padding: 15px;
-        margin-top: 18px;
+        margin-top: 15px;
         background: rgba(12, 12, 30, 0.7);
         border: 1px solid #00eaff80;
         border-radius: 12px;
         color: white;
-        font-size: 16px;
+        font-size: 15px;
         outline: none;
     }
 
     button {
         width: 100%;
-        padding: 16px;
-        margin-top: 26px;
-        font-size: 19px;
+        padding: 15px;
+        margin-top: 22px;
+        font-size: 18px;
         background: linear-gradient(90deg, #00eaff, #b400ff);
         border: none;
         border-radius: 14px;
@@ -102,10 +100,8 @@
 
 <body>
 
-<!-- CLEAN CANDLE BACKGROUND -->
 <div class="bg-candles"></div>
 
-<!-- LOGIN BOX -->
 <div class="login-box">
     <h2>Abrox AI Login</h2>
     <input id="uidInput" type="text" placeholder="Enter your UID">
@@ -114,15 +110,11 @@
 </div>
 
 <script>
-/* === Login Verification === */
 async function verify() {
     const uid = document.getElementById("uidInput").value.trim();
     const pass = document.getElementById("passInput").value.trim();
 
-    if (!uid || !pass) {
-        alert("Enter UID and Password");
-        return;
-    }
+    if (!uid || !pass) return alert("Enter UID and Password");
 
     try {
         const subs = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json").then(r => r.json());
@@ -130,8 +122,8 @@ async function verify() {
 
         const envText = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env").then(r => r.text());
         const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-        if (!match) return alert("Password config missing.");
 
+        if (!match) return alert("Password config missing.");
         if (pass !== match[1].trim()) return alert("Incorrect password.");
 
         window.location.href = "dashboard.html?uid=" + uid;
