@@ -20,66 +20,35 @@
         position: relative;
     }
 
-    /* ★ stronger floating blobs */
-    .blob {
+    /* ★ ANIMATED CANDLE BACKGROUND ONLY */
+    .candles-bg {
         position: absolute;
-        border-radius: 50%;
-        filter: blur(140px);
-        opacity: 0.55;
-        animation: floatBlob 12s infinite ease-in-out alternate;
+        inset: 0;
+        background: url('https://i.imgur.com/K6OTZPZ.png'); /* Candle PNG */
+        background-size: 170%;
+        background-repeat: repeat-x;
+        opacity: 0.25;
+        animation: candleMove 22s linear infinite;
+        z-index: 1;
+        filter: blur(0.5px);
     }
 
-    .blob1 {
-        width: 520px;
-        height: 520px;
-        background: rgba(255, 0, 255, 0.7);
-        top: -120px;
-        left: -120px;
-        animation-delay: 0s;
+    @keyframes candleMove {
+        from { background-position: 0 0; }
+        to { background-position: -2000px 0; }
     }
 
-    .blob2 {
-        width: 480px;
-        height: 480px;
-        background: rgba(0, 255, 255, 0.7);
-        bottom: -130px;
-        right: -150px;
-        animation-delay: 2s;
-    }
-
-    @keyframes floatBlob {
-        0% { transform: translate(0px, 0px) scale(1); }
-        100% { transform: translate(40px, 50px) scale(1.2); }
-    }
-
-    /* ★ floating neon stars (now moving) */
-    @keyframes starFloat {
-        0% { transform: translateY(0px) translateX(0px); opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { transform: translateY(-60px) translateX(30px); opacity: 0.4; }
-    }
-
-    .star {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #00eaff;
-        animation: starFloat 6s infinite ease-in-out alternate;
-    }
-
-    /* ★ Premium Login Box */
+    /* ★ LOGIN BOX */
     .container {
         width: 90%;
         max-width: 420px;
-        background: rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255,255,255,0.10);
         border-radius: 22px;
         padding: 40px;
-        backdrop-filter: blur(18px);
-        box-shadow: 0 0 35px rgba(255,0,255,0.25), 0 0 45px rgba(0,255,255,0.18);
-        z-index: 10;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.22);
+        z-index: 5;
         animation: fadeUp 1.2s ease;
     }
 
@@ -159,22 +128,8 @@
 
 <body>
 
-<!-- GLOW BLOBS -->
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-
-<!-- Floating Stars Generator -->
-<script>
-for (let i = 0; i < 85; i++) {
-    let star = document.createElement("div");
-    star.className = "star";
-    star.style.top = Math.random() * 100 + "vh";
-    star.style.left = Math.random() * 100 + "vw";
-    star.style.animationDuration = (4 + Math.random() * 6) + "s";
-    star.style.animationDelay = Math.random() * 3 + "s";
-    document.body.appendChild(star);
-}
-</script>
+<!-- ★ Animated Candles Background (ONLY) -->
+<div class="candles-bg"></div>
 
 <div class="container">
     <h2>Abrox AI Login</h2>
@@ -217,7 +172,9 @@ async function verify() {
         if (pass !== correctPass) return error("Incorrect password.");
 
         success("Login successful! Redirecting...");
-        setTimeout(() => { window.location.href = `${DASHBOARD_URL}?uid=${uid}`; }, 1200);
+        setTimeout(() => {
+            window.location.href = `${DASHBOARD_URL}?uid=${uid}`;
+        }, 1200);
 
     } catch {
         error("Connection error. Check GitHub file privacy.");
