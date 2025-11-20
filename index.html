@@ -1,197 +1,267 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abrox AI — Secure Login</title>
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Abrox AI — Secure Login (Ultra Premium)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", Arial, sans-serif;
-        background: #02020A;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        color: white;
-        position: relative;
-    }
+  :root{
+    --bg:#020214;
+    --glass: rgba(0,0,0,0.36);
+    --accent1: #00f6ff;
+    --accent2: #ff00f5;
+    --accent3: #7afc9e;
+  }
 
-    /* ★ ANIMATED CANDLE BACKGROUND ONLY */
-    .candles-bg {
-        position: absolute;
-        inset: 0;
-        background: url('https://i.imgur.com/K6OTZPZ.png'); /* Candle PNG */
-        background-size: 170%;
-        background-repeat: repeat-x;
-        opacity: 0.25;
-        animation: candleMove 22s linear infinite;
-        z-index: 1;
-        filter: blur(0.5px);
-    }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:"Poppins",system-ui,Arial;color:#fff;overflow:hidden;}
+  .stage{position:fixed;inset:0;overflow:hidden;touch-action:none;background:linear-gradient(180deg,#020217 0%, #00040a 60%);}
 
-    @keyframes candleMove {
-        from { background-position: 0 0; }
-        to { background-position: -2000px 0; }
-    }
+/* ---------------- HOLOGRAM LAYERS ---------------- */
+  .holo-layer{position:absolute;inset:0;background-repeat:repeat-x;background-size:150%;pointer-events:none;mix-blend-mode:screen;will-change:background-position;z-index:3}
+  .layer1{background-image:url('https://i.imgur.com/UPU0w1V.png');opacity:0.12;filter:blur(2px) brightness(.9);animation:holoMove1 48s linear infinite;}
+  .layer2{background-image:url('https://i.imgur.com/UPU0w1V.png');opacity:0.24;filter:blur(.6px) brightness(1.12);animation:holoMove2 28s linear infinite;}
+  .layer3{background-image:url('https://i.imgur.com/UPU0w1V.png');opacity:0.42;filter:brightness(1.35) saturate(1.05);animation:holoMove3 16s linear infinite;}
 
-    /* ★ LOGIN BOX */
-    .container {
-        width: 90%;
-        max-width: 420px;
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 22px;
-        padding: 40px;
-        backdrop-filter: blur(16px);
-        box-shadow: 0 0 40px rgba(0, 255, 255, 0.22);
-        z-index: 5;
-        animation: fadeUp 1.2s ease;
-    }
+/* neon grid */
+  .holo-grid{position:absolute;inset:0;z-index:4;background-image:linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px);background-size:86px 86px;mix-blend-mode:overlay;animation:gridPulse 6s ease-in-out infinite;pointer-events:none;}
 
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(35px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+/* aurora overlay */
+  .aurora{position:absolute;inset:0;z-index:5;pointer-events:none;mix-blend-mode:screen;opacity:0.75;background:
+    radial-gradient(40% 20% at 10% 20%, rgba(0,240,255,0.12), transparent 20%),
+    radial-gradient(50% 25% at 80% 65%, rgba(255,0,240,0.10), transparent 18%);}
+  .aurora:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(0,240,255,0.02), rgba(255,0,240,0.02));filter:blur(18px);opacity:.9;animation:auroraShift 10s linear infinite;}
 
-    h2 {
-        text-align: center;
-        font-size: 34px;
-        margin-bottom: 30px;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00F6FF, #4AFFFF, #00CFFF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 18px #00eaff;
-    }
+/* subtle bloom/lens flare */
+  .lens{
+    position:absolute;left:10%;top:12%;width:420px;height:220px;border-radius:50%;background:radial-gradient(closest-side, rgba(255,150,255,0.06), transparent 35%);filter:blur(28px);mix-blend-mode:screen;z-index:6;pointer-events:none;
+  }
 
-    input {
-        width: 100%;
-        padding: 16px;
-        margin-top: 18px;
-        background: rgba(10, 12, 25, 0.72);
-        border-radius: 12px;
-        border: 1px solid rgba(0,255,255,0.45);
-        color: white;
-        font-size: 16px;
-        outline: none;
-        transition: 0.25s;
-    }
+/* particles canvas */
+  #particleCanvas{position:absolute;inset:0;z-index:7;pointer-events:none;}
 
-    input:focus {
-        border-color: #FF00F5;
-        box-shadow: 0 0 20px #ff00f570;
-    }
+/* crypto ticker */
+  .ticker{
+    position:fixed;left:50%;transform:translateX(-50%);top:28px;z-index:10;
+    display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px;
+    background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    padding:8px 18px;border-radius:32px;border:1px solid rgba(255,255,255,0.04);
+    backdrop-filter:blur(6px);color:#bfefff;box-shadow:0 8px 40px rgba(0,0,0,0.6);
+  }
+  .ticker .strip{overflow:hidden;white-space:nowrap}
+  .ticker span{display:inline-block;margin-right:36px;padding-right:6px;color:#e6f9ff;font-weight:800}
 
-    button {
-        width: 100%;
-        padding: 17px;
-        margin-top: 28px;
-        background: linear-gradient(90deg, #FF00F5, #B400FF);
-        border: none;
-        border-radius: 14px;
-        color: white;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 0 30px #FF00F590;
-        transition: 0.25s;
-    }
+/* ---------------- LOGIN UI ---------------- */
+  .centerWrap{position:relative;z-index:12;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+  .card{
+    width:100%;max-width:460px;background:var(--glass);border-radius:20px;padding:36px;backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.05);box-shadow:0 10px 50px rgba(0,0,0,0.6);
+    transform:translate3d(0,0,0);
+  }
+  h1{font-size:30px;margin:0 0 18px 0;line-height:1;font-weight:800;background:linear-gradient(90deg,var(--accent1),#8ff0ff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  p.hint{margin:0 0 18px 0;color:rgba(255,255,255,0.7);font-size:13px}
 
-    button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 40px #FF00F5DD;
-    }
+/* inputs */
+  .row{display:flex;flex-direction:column;gap:12px}
+  input{padding:14px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(2,6,14,0.6);color:#eaffff;font-size:15px;outline:none;box-shadow:inset 0 -8px 18px rgba(0,0,0,0.35)}
+  input:focus{border:1px solid rgba(0,240,255,0.6);box-shadow:0 8px 30px rgba(0,240,255,0.04)}
+  .btn{margin-top:12px;padding:14px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--accent2),#b200ff);color:#fff;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 36px rgba(178,0,255,0.12)}
+  .msg{margin-top:14px;padding:10px;border-radius:10px;display:none;font-weight:600}
 
-    .error, .success {
-        margin-top: 18px;
-        padding: 12px;
-        border-radius: 10px;
-        display: none;
-        text-align: center;
-    }
+/* responsive tweaks */
+  @media (max-width:520px){
+    .ticker{top:12px;font-size:12px;padding:6px 12px}
+    .card{padding:22px}
+    h1{font-size:22px}
+  }
 
-    .error {
-        background: rgba(255, 0, 0, 0.45);
-        box-shadow: 0 0 12px #ff000066;
-    }
-
-    .success {
-        background: rgba(0, 255, 150, 0.45);
-        box-shadow: 0 0 12px #00ff9970;
-    }
+/* animations */
+  @keyframes holoMove1{from{background-position:0 0}to{background-position:-600px 0}}
+  @keyframes holoMove2{from{background-position:0 0}to{background-position:-1200px 0}}
+  @keyframes holoMove3{from{background-position:0 0}to{background-position:-1800px 0}}
+  @keyframes gridPulse{0%{opacity:.08;transform:scale(1)}50%{opacity:.15;transform:scale(1.02)}100%{opacity:.08;transform:scale(1)}}
+  @keyframes auroraShift{from{transform:translateX(-2%)}to{transform:translateX(2%)}}
 </style>
 </head>
-
 <body>
+  <div class="stage" id="stage">
+    <!-- hologram layers -->
+    <div class="holo-layer layer1" id="layer1"></div>
+    <div class="holo-layer layer2" id="layer2"></div>
+    <div class="holo-layer layer3" id="layer3"></div>
+    <div class="holo-grid"></div>
+    <div class="aurora"></div>
+    <div class="lens"></div>
+    <canvas id="particleCanvas"></canvas>
 
-<!-- ★ Animated Candles Background (ONLY) -->
-<div class="candles-bg"></div>
+    <!-- ticker -->
+    <div class="ticker" id="ticker">
+      <div style="opacity:.9;margin-right:6px">LIVE</div>
+      <div class="strip" id="tickerStrip" aria-hidden="true">
+        <span>BTC/USD 73,241 ▲1.6%</span>
+        <span>ETH/USD 4,210 ▲0.8%</span>
+        <span>EUR/USD 1.084 ▼0.12%</span>
+        <span>USD/JPY 156.4 ▲0.2%</span>
+        <span>XRP/USD 0.62 ▼0.9%</span>
+      </div>
+    </div>
 
-<div class="container">
-    <h2>Abrox AI Login</h2>
+    <!-- center login -->
+    <div class="centerWrap">
+      <div class="card" id="loginCard" role="main" aria-label="Abrox AI Login">
+        <h1>Abrox AI — Secure Login</h1>
+        <p class="hint">First select your access UID and dashboard password to continue.</p>
 
-    <input id="uidInput" type="text" placeholder="Enter your UID">
-    <input id="passInput" type="password" placeholder="Dashboard Password">
+        <div class="row">
+          <input id="uidInput" type="text" placeholder="UID">
+          <input id="passInput" type="password" placeholder="Dashboard Password">
+          <button class="btn" onclick="verify()">LOGIN</button>
+        </div>
 
-    <button onclick="verify()">LOGIN</button>
-
-    <div id="errorBox" class="error"></div>
-    <div id="successBox" class="success"></div>
-</div>
+        <div id="errorBox" class="msg" style="background:rgba(255,0,0,0.12);color:#ffb3b3;"></div>
+        <div id="successBox" class="msg" style="background:rgba(0,255,150,0.06);color:#afffd1;"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
+/* ================== Particles (GPU friendly) ================== */
+(function initParticles(){
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  let DPR = Math.max(1, window.devicePixelRatio || 1);
+  let w, h, particles=[];
+  function resize(){
+    DPR = Math.max(1, window.devicePixelRatio || 1);
+    w = canvas.width = innerWidth * DPR;
+    h = canvas.height = innerHeight * DPR;
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize, {passive:true});
+  resize();
+
+  function rand(min,max){return Math.random()*(max-min)+min;}
+  for(let i=0;i<110;i++){
+    particles.push({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight,
+      vx: rand(-0.05,0.05),
+      vy: rand(-0.15,-0.6),
+      size: rand(0.6,2.8),
+      alpha: rand(0.06,0.28),
+      hue: rand(160,300)
+    });
+  }
+
+  function step(){
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    for(let p of particles){
+      p.x += p.vx * (1 + Math.sin(Date.now()/5000));
+      p.y += p.vy;
+      if(p.y < -20){ p.y = innerHeight + 20; p.x = Math.random()*innerWidth; }
+      ctx.beginPath();
+      // soft glow
+      let g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*8);
+      g.addColorStop(0, `hsla(${p.hue},100%,70%,${p.alpha*0.9})`);
+      g.addColorStop(0.4, `hsla(${p.hue},90%,60%,${p.alpha*0.45})`);
+      g.addColorStop(1, `hsla(${p.hue},85%,50%,0)`);
+      ctx.fillStyle = g;
+      ctx.arc(p.x, p.y, p.size*6, 0, Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+/* ================== ticker auto-scroll ================== */
+(function tickerLoop(){
+  const strip = document.getElementById('tickerStrip');
+  let x = 0;
+  function loop(){
+    x -= 0.6; // speed
+    if(Math.abs(x) > strip.scrollWidth/2) x = 0;
+    strip.style.transform = `translateX(${x}px)`;
+    requestAnimationFrame(loop);
+  }
+  // duplicate content to make seamless scroll
+  strip.innerHTML += strip.innerHTML;
+  requestAnimationFrame(loop);
+})();
+
+/* ================== tilt & mouse parallax ================== */
+(function parallax(){
+  const stage = document.getElementById('stage');
+  const l1 = document.getElementById('layer1');
+  const l2 = document.getElementById('layer2');
+  const l3 = document.getElementById('layer3');
+  let rx=0, ry=0, mx=0, my=0;
+
+  // mouse move
+  window.addEventListener('mousemove', e=>{
+    mx = (e.clientX / innerWidth - 0.5) * 2; // -1..1
+    my = (e.clientY / innerHeight - 0.5) * 2;
+    apply();
+  }, {passive:true});
+
+  // device tilt (mobile)
+  window.addEventListener('deviceorientation', e=>{
+    if(e.gamma==null) return;
+    rx = Math.min(12, Math.max(-12, e.gamma));
+    ry = Math.min(12, Math.max(-12, e.beta - 30));
+    apply();
+  }, {passive:true});
+
+  function apply(){
+    // compute offsets
+    const ox1 = mx * 8 + rx * 0.2;
+    const oy1 = my * 6 + ry * 0.2;
+    const ox2 = mx * 16 + rx * 0.4;
+    const ox3 = mx * 28 + rx * 0.7;
+
+    l1.style.backgroundPosition = `${-ox1*2}px ${-oy1}px`;
+    l2.style.backgroundPosition = `${-ox2*2}px ${-oy1}px`;
+    l3.style.backgroundPosition = `${-ox3*2}px ${-oy1}px`;
+    // subtle card tilt
+    const card = document.getElementById('loginCard');
+    card.style.transform = `translate3d(0,0,0) rotateX(${my*2}deg) rotateY(${mx*4}deg)`;
+  }
+})();
+
+/* ================== LOGIN / VERIFICATION (unchanged) ================== */
 const SUBSCRIBERS_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json";
 const ENV_URL = "https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env";
 const DASHBOARD_URL = "dashboard.html";
 
 async function verify() {
-    const uid = document.getElementById("uidInput").value.trim();
-    const pass = document.getElementById("passInput").value.trim();
+  const uid = document.getElementById("uidInput").value.trim();
+  const pass = document.getElementById("passInput").value.trim();
+  const errorBox = document.getElementById("errorBox");
+  const successBox = document.getElementById("successBox");
+  errorBox.style.display = "none"; successBox.style.display = "none";
+  if(!uid || !pass) return showError("Please enter UID and Password");
 
-    const errorBox = document.getElementById("errorBox");
-    const successBox = document.getElementById("successBox");
+  try {
+    const subs = await fetch(SUBSCRIBERS_URL).then(r=>r.json());
+    if(!subs[uid]) return showError("UID not found.");
 
-    errorBox.style.display = "none";
-    successBox.style.display = "none";
+    const envText = await fetch(ENV_URL).then(r=>r.text());
+    const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
+    if(!match) return showError("Password configuration missing.");
 
-    if (!uid || !pass) return error("Please enter UID and Password");
+    const correctPass = match[1].trim();
+    if(pass !== correctPass) return showError("Incorrect password.");
 
-    try {
-        const subs = await fetch(SUBSCRIBERS_URL).then(r => r.json());
-        if (!subs[uid]) return error("UID not found.");
-
-        const envText = await fetch(ENV_URL).then(r => r.text());
-        const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-        if (!match) return error("Password configuration missing.");
-
-        const correctPass = match[1].trim();
-        if (pass !== correctPass) return error("Incorrect password.");
-
-        success("Login successful! Redirecting...");
-        setTimeout(() => {
-            window.location.href = `${DASHBOARD_URL}?uid=${uid}`;
-        }, 1200);
-
-    } catch {
-        error("Connection error. Check GitHub file privacy.");
-    }
+    showSuccess("Login successful! Redirecting...");
+    setTimeout(()=>{ window.location.href = `${DASHBOARD_URL}?uid=${encodeURIComponent(uid)}`; }, 1000);
+  } catch(err){
+    showError("Connection error. Check GitHub file privacy.");
+  }
 }
-
-function error(msg) {
-    const box = document.getElementById("errorBox");
-    box.innerHTML = msg;
-    box.style.display = "block";
-}
-function success(msg) {
-    const box = document.getElementById("successBox");
-    box.innerHTML = msg;
-    box.style.display = "block";
-}
+function showError(msg){ const e=document.getElementById('errorBox'); e.textContent=msg; e.style.display='block'; }
+function showSuccess(msg){ const e=document.getElementById('successBox'); e.textContent=msg; e.style.display='block'; }
 </script>
-
 </body>
 </html>
