@@ -1,209 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABROX AI — Login</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ABROX AI — Elite Login (Hologram Candles)</title>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: #010208;
-        height: 100dvh; /* mobile-safe height */
-        font-family: "Poppins", sans-serif;
-        position: relative;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
+  :root{
+    --bg:#040414;
+    --panel-bg: rgba(2,4,12,0.64);
+    --glass-edge: rgba(255,255,255,0.06);
+    --accent1: #00eaff;
+    --accent2: #b300ff;
+    --btn-grad: linear-gradient(90deg,#ff00f7,#b300ff);
+  }
 
-    /* ============================================
-       LAYER 1 — Mini Candle Hologram Background
-    ============================================= */
-    .bg-candles {
-        position: absolute;
-        inset: 0;
-        background-image: url('https://files.catbox.moe/1tj9nh.png');
-        background-repeat: repeat;
-        background-size: 780px auto;
-        opacity: 0.22;
-        filter: brightness(1.20) saturate(1.15);
-        animation: slideCandles 45s linear infinite;
-        z-index: 1;
-    }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:"Poppins",system-ui,Arial;color:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  body{min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
 
-    @keyframes slideCandles {
-        from { background-position: 0 0; }
-        to { background-position: -1500px 0; }
-    }
+  /* HOLOGRAM BACKGROUND */
+  .holo-wrap{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .candle-layer{
+    position:absolute;top:50%;left:50%;
+    width:220%;height:160%;
+    transform:translate(-50%,-50%);
+    background-image: url('https://files.catbox.moe/1tj9nh.png');
+    background-repeat: repeat;background-size: 780px auto;
+    filter: saturate(1.1) brightness(1.05) contrast(.95);
+    opacity:0.14;animation: candleMove 52s linear infinite;
+  }
+  .candle-layer.back{
+    width:260%;height:180%;background-size:1100px auto;
+    opacity:0.08;animation: candleMoveBack 78s linear infinite;transform:translate(-50%,-50%) scale(1.02);
+  }
+  @keyframes candleMove { from{transform:translate(-50%,-50%)} to{transform:translate(calc(-50% - 520px),-50%)} }
+  @keyframes candleMoveBack { from{transform:translate(-50%,-50%) scale(1.02)} to{transform:translate(calc(-50% - 800px),-50%) scale(1.02)} }
 
-    /* ============================================
-       LAYER 2 — Hologram Noise Film
-    ============================================= */
-    .noise-film {
-        position: absolute;
-        inset: 0;
-        background-image: url('https://files.catbox.moe/x0amg1.png'); 
-        opacity: 0.07;
-        mix-blend-mode: overlay;
-        pointer-events: none;
-        animation: noiseMove 0.8s steps(2) infinite;
-        z-index: 2;
-    }
+  .holo-veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,4,10,0.60), rgba(0,4,8,0.72), rgba(0,0,0,0.78));z-index:1;}
+  .noise-film{position:absolute;inset:0;background-image:url('https://files.catbox.moe/x0amg1.png');opacity:0.06;mix-blend-mode:overlay;z-index:2;animation:noiseShift .9s steps(2) infinite;}
+  @keyframes noiseShift{from{transform:translate(0,0)}to{transform:translate(-2%,-2%)}}
+  .neon-pulse{
+    position:absolute;inset:0;z-index:3;background:
+    radial-gradient(40% 30% at 20% 25%, rgba(0,230,255,0.035),transparent),
+    radial-gradient(50% 28% at 82% 70%, rgba(179,0,255,0.03),transparent);
+    filter:blur(28px);animation:pulseSoft 8s ease-in-out infinite;
+  }
+  @keyframes pulseSoft{0%{opacity:.03}50%{opacity:.08}100%{opacity:.03}}
 
-    @keyframes noiseMove {
-        0% { transform: translate(0,0); }
-        100% { transform: translate(-2%, -2%); }
-    }
+  /* PANEL */
+  .panel{
+    position:relative;z-index:6;width:92%;max-width:440px;padding:36px;border-radius:20px;
+    background:var(--panel-bg);border:1px solid var(--glass-edge);
+    box-shadow:0 10px 60px rgba(0,0,0,.6),0 6px 30px rgba(0,0,0,.35);
+    backdrop-filter: blur(12px) saturate(1.05);
+    -webkit-backdrop-filter: blur(12px) saturate(1.05);
+    text-align:center;
+  }
 
-    /* ============================================
-       LAYER 3 — Neon Pulse Glow
-    ============================================= */
-    .neon-pulse {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: radial-gradient(circle at 50% 50%, rgba(0,255,255,0.08), transparent 60%);
-        animation: pulse 6s ease-in-out infinite;
-        z-index: 3;
-    }
+  .title{
+    font-size:30px;font-weight:800;margin:0 0 18px 0;
+    background:linear-gradient(90deg,#00f0ff,#7fe9ff,#b500ff);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
 
-    @keyframes pulse {
-        0% { opacity: 0.04; }
-        50% { opacity: 0.12; }
-        100% { opacity: 0.04; }
-    }
+  /* NEW: small pro instructions */
+  .pro-prompt{
+    font-size:12px;
+    color:rgba(255,255,255,0.58);
+    margin-top:-6px;
+    margin-bottom:18px;
+    line-height:1.45;
+  }
 
-    /* ============================================
-       LOGIN CONTAINER (ELITE HOLOGRAM)
-    ============================================= */
-    .container {
-        z-index: 10;
-        width: 90%;
-        max-width: 420px;
-        background: rgba(0, 0, 0, 0.30);
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 22px;
-        padding: 38px;
-        backdrop-filter: blur(16px);
-        box-shadow: 
-            0 0 30px rgba(0,255,255,0.20),
-            0 0 40px rgba(180,0,255,0.15);
-        animation: fadeUp 1s ease;
-        text-align: center;
-    }
+  .field-wrap{position:relative;width:100%;margin-top:14px;}
+  .field{
+    width:100%;display:block;background:rgba(6,8,18,0.7);
+    border:1px solid rgba(0,230,255,0.12);
+    padding:14px 16px;border-radius:12px;color:#dfeffd;font-size:15px;box-sizing:border-box;
+  }
+  .field::placeholder{color:rgba(200,220,230,0.42)}
 
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(28px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+  /* NEW: show/hide eye button */
+  .eye{
+    position:absolute;right:14px;top:50%;
+    transform:translateY(-50%);
+    width:22px;height:22px;cursor:pointer;
+    opacity:0.55;transition:.15s;
+  }
+  .eye:hover{opacity:0.9;}
 
-    h2 {
-        font-size: 32px;
-        margin-bottom: 28px;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00F6FF, #00CFFF, #B400FF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 20px #00eaff55;
-    }
+  .btn{
+    margin-top:22px;padding:14px;border-radius:14px;border:none;width:100%;
+    font-weight:800;font-size:18px;color:#fff;cursor:pointer;
+    background: linear-gradient(90deg, rgba(255,0,247,0.98), rgba(179,0,255,0.98));
+    box-shadow:0 8px 30px rgba(179,0,255,0.14);
+  }
 
-    input {
-        width: 100%;
-        padding: 15px;
-        margin-top: 16px;
-        background: rgba(10, 12, 25, 0.72);
-        border-radius: 12px;
-        border: 1px solid rgba(0,255,255,0.45);
-        color: white;
-        font-size: 16px;
-        outline: none;
-        transition: 0.25s;
-    }
-
-    input:focus {
-        border-color: #FF00F5;
-        box-shadow: 0 0 20px #ff00f570;
-    }
-
-    button {
-        width: 100%;
-        padding: 17px;
-        margin-top: 26px;
-        background: linear-gradient(90deg, #FF00F5, #B400FF);
-        border: none;
-        border-radius: 14px;
-        color: white;
-        font-weight: 700;
-        font-size: 20px;
-        cursor: pointer;
-        box-shadow: 0 0 25px #FF00F580;
-        transition: 0.25s;
-    }
-
-    button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 40px #FF00F5CC;
-    }
+  @media(max-width:420px){.title{font-size:24px}.panel{padding:24px}}
 </style>
 </head>
-
 <body>
 
-<!-- HOLOGRAM BACKGROUND LAYERS -->
-<div class="bg-candles"></div>
-<div class="noise-film"></div>
-<div class="neon-pulse"></div>
-
-<!-- LOGIN UI -->
-<div class="container">
-    <h2>Abrox AI Login</h2>
-    <input id="uidInput" type="text" placeholder="Enter your UID">
-    <input id="passInput" type="password" placeholder="Dashboard Password">
-    <button onclick="verify()">LOGIN</button>
+<div class="holo-wrap">
+  <div class="candle-layer back"></div>
+  <div class="candle-layer"></div>
+  <div class="holo-veil"></div>
+  <div class="noise-film"></div>
+  <div class="neon-pulse"></div>
 </div>
 
+<main class="panel">
+  <h1 class="title">Abrox AI Login</h1>
+
+  <!-- NEW: Pro direction prompt -->
+  <div class="pro-prompt">
+    Enter the UID assigned to your Abrox subscription.<br>
+    Use the dashboard password provided upon activation.
+  </div>
+
+  <div class="field-wrap">
+    <input id="uidInput" class="field" type="text" placeholder="Enter your UID" autocomplete="username"/>
+  </div>
+
+  <div class="field-wrap">
+    <input id="passInput" class="field" type="password" placeholder="Dashboard Password" autocomplete="current-password"/>
+    <!-- NEW: eye icon (inline SVG) -->
+    <svg class="eye" onclick="togglePass()" viewBox="0 0 24 24">
+      <path fill="#cfe7ff" d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 .001-8.001A4 4 0 0 1 12 16z"/>
+    </svg>
+  </div>
+
+  <button class="btn" onclick="verify()">LOGIN</button>
+</main>
+
 <script>
-async function verify() {
-    const uid = document.getElementById("uidInput").value.trim();
-    const pass = document.getElementById("passInput").value.trim();
+/* Password eye toggle */
+function togglePass(){
+  const p = document.getElementById("passInput");
+  p.type = (p.type === "password") ? "text" : "password";
+}
 
-    if (!uid || !pass) {
-        alert("Enter UID and Password");
-        return;
-    }
+/* Verify */
+function showAlert(m){ alert(m); }
 
-    try {
-        const subsResp = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json");
-        const subs = await subsResp.json();
+async function verify(){
+  const uid = uidInput.value.trim();
+  const pass = passInput.value.trim();
+  if(!uid || !pass){ return showAlert("Enter UID and Password"); }
 
-        if (!subs[uid]) {
-            alert("UID not found.");
-            return;
-        }
+  try{
+    const s = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json",{cache:"no-store"});
+    if(!s.ok) return showAlert("Failed to load subscribers.");
+    const subs = await s.json();
+    if(!subs[uid]) return showAlert("UID not found.");
 
-        const envResp = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env");
-        const envText = await envResp.text();
-        const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
+    const e = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env",{cache:"no-store"});
+    if(!e.ok) return showAlert("Failed to load config.");
+    const envText = await e.text();
+    const m = envText.match(/DASHBOARD_PASSWORD=(.*)/);
+    if(!m) return showAlert("Password config missing.");
+    const correct = m[1].trim();
 
-        if (!match) {
-            alert("Password config missing.");
-            return;
-        }
+    if(pass !== correct) return showAlert("Incorrect password.");
 
-        if (pass !== match[1].trim()) {
-            alert("Incorrect password.");
-            return;
-        }
+    window.location.href = "dashboard.html?uid="+encodeURIComponent(uid);
 
-        window.location.href = "dashboard.html?uid=" + uid;
-
-    } catch (err) {
-        alert("Connection error.");
-    }
+  }catch(err){
+    console.error(err);
+    showAlert("Connection error.");
+  }
 }
 </script>
 
