@@ -19,34 +19,66 @@
 
   /* HOLOGRAM BACKGROUND */
   .holo-wrap{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+
+  /* 🔥 FIXED — HIGH VISIBILITY CANDLES */
   .candle-layer{
     position:absolute;top:50%;left:50%;
-    width:220%;height:160%;
+    width:240%;height:170%;
     transform:translate(-50%,-50%);
     background-image: url('https://files.catbox.moe/1tj9nh.png');
-    background-repeat: repeat;background-size: 780px auto;
-    filter: saturate(1.1) brightness(1.05) contrast(.95);
-    opacity:0.14;animation: candleMove 52s linear infinite;
+    background-repeat: repeat;
+    background-size: 720px auto;
+    filter: saturate(1.3) brightness(1.25) contrast(1.1);
+    opacity:0.35;                      /* increased from 0.14 → FIX */
+    animation: candleMove 48s linear infinite;
   }
+
   .candle-layer.back{
-    width:260%;height:180%;background-size:1100px auto;
-    opacity:0.08;animation: candleMoveBack 78s linear infinite;transform:translate(-50%,-50%) scale(1.02);
+    width:280%;height:190%;
+    background-size: 1000px auto;
+    opacity:0.22;                      /* increased from 0.08 → FIX */
+    filter: saturate(1.1) brightness(1.15) contrast(1.05);
+    animation: candleMoveBack 75s linear infinite;
+    transform:translate(-50%,-50%) scale(1.03);
   }
-  @keyframes candleMove { from{transform:translate(-50%,-50%)} to{transform:translate(calc(-50% - 520px),-50%)} }
-  @keyframes candleMoveBack { from{transform:translate(-50%,-50%) scale(1.02)} to{transform:translate(calc(-50% - 800px),-50%) scale(1.02)} }
 
-  .holo-veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,4,10,0.60), rgba(0,4,8,0.72), rgba(0,0,0,0.78));z-index:1;}
-  .noise-film{position:absolute;inset:0;background-image:url('https://files.catbox.moe/x0amg1.png');opacity:0.06;mix-blend-mode:overlay;z-index:2;animation:noiseShift .9s steps(2) infinite;}
-  @keyframes noiseShift{from{transform:translate(0,0)}to{transform:translate(-2%,-2%)}}
+  @keyframes candleMove {
+    from{transform:translate(-50%,-50%)}
+    to{transform:translate(calc(-50% - 480px),-50%)}
+  }
+  @keyframes candleMoveBack {
+    from{transform:translate(-50%,-50%) scale(1.03)}
+    to{transform:translate(calc(-50% - 760px),-50%) scale(1.03)}
+  }
+
+  .holo-veil{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,4,10,0.55), rgba(0,4,8,0.65), rgba(0,0,0,0.78));
+    z-index:1;
+  }
+
+  .noise-film{
+    position:absolute;inset:0;
+    background-image:url('https://files.catbox.moe/x0amg1.png');
+    opacity:0.08;mix-blend-mode:overlay;z-index:2;
+    animation:noiseShift .9s steps(2) infinite;
+  }
+
+  @keyframes noiseShift{
+    from{transform:translate(0,0)}
+    to{transform:translate(-2%,-2%)}
+  }
+
   .neon-pulse{
-    position:absolute;inset:0;z-index:3;background:
-    radial-gradient(40% 30% at 20% 25%, rgba(0,230,255,0.035),transparent),
-    radial-gradient(50% 28% at 82% 70%, rgba(179,0,255,0.03),transparent);
-    filter:blur(28px);animation:pulseSoft 8s ease-in-out infinite;
+    position:absolute;inset:0;z-index:3;
+    background:
+      radial-gradient(40% 30% at 20% 25%, rgba(0,230,255,0.05),transparent),
+      radial-gradient(50% 28% at 82% 70%, rgba(179,0,255,0.04),transparent);
+    filter:blur(30px);
+    animation:pulseSoft 8s ease-in-out infinite;
   }
-  @keyframes pulseSoft{0%{opacity:.03}50%{opacity:.08}100%{opacity:.03}}
+  @keyframes pulseSoft{0%{opacity:.04}50%{opacity:.1}100%{opacity:.04}}
 
-  /* PANEL */
   .panel{
     position:relative;z-index:6;width:92%;max-width:440px;padding:36px;border-radius:20px;
     background:var(--panel-bg);border:1px solid var(--glass-edge);
@@ -62,13 +94,9 @@
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   }
 
-  /* NEW: small pro instructions */
   .pro-prompt{
-    font-size:12px;
-    color:rgba(255,255,255,0.58);
-    margin-top:-6px;
-    margin-bottom:18px;
-    line-height:1.45;
+    font-size:12px;color:rgba(255,255,255,0.58);
+    margin-top:-6px;margin-bottom:18px;line-height:1.45;
   }
 
   .field-wrap{position:relative;width:100%;margin-top:14px;}
@@ -79,14 +107,13 @@
   }
   .field::placeholder{color:rgba(200,220,230,0.42)}
 
-  /* NEW: show/hide eye button */
   .eye{
     position:absolute;right:14px;top:50%;
     transform:translateY(-50%);
     width:22px;height:22px;cursor:pointer;
-    opacity:0.55;transition:.15s;
+    opacity:0.6;transition:.15s;
   }
-  .eye:hover{opacity:0.9;}
+  .eye:hover{opacity:1;}
 
   .btn{
     margin-top:22px;padding:14px;border-radius:14px;border:none;width:100%;
@@ -111,7 +138,6 @@
 <main class="panel">
   <h1 class="title">Abrox AI Login</h1>
 
-  <!-- NEW: Pro direction prompt -->
   <div class="pro-prompt">
     Enter the UID assigned to your Abrox subscription.<br>
     Use the dashboard password provided upon activation.
@@ -123,7 +149,6 @@
 
   <div class="field-wrap">
     <input id="passInput" class="field" type="password" placeholder="Dashboard Password" autocomplete="current-password"/>
-    <!-- NEW: eye icon (inline SVG) -->
     <svg class="eye" onclick="togglePass()" viewBox="0 0 24 24">
       <path fill="#cfe7ff" d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 .001-8.001A4 4 0 0 1 12 16z"/>
     </svg>
@@ -133,13 +158,11 @@
 </main>
 
 <script>
-/* Password eye toggle */
 function togglePass(){
   const p = document.getElementById("passInput");
   p.type = (p.type === "password") ? "text" : "password";
 }
 
-/* Verify */
 function showAlert(m){ alert(m); }
 
 async function verify(){
