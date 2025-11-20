@@ -10,7 +10,7 @@
         margin: 0;
         padding: 0;
         background: #010208;
-        height: 100dvh; /* Full viewport height, mobile safe */
+        height: 100dvh; /* mobile-safe height */
         font-family: "Poppins", sans-serif;
         position: relative;
         color: white;
@@ -20,19 +20,19 @@
         overflow: hidden;
     }
 
-    /* ============================
-       HOLOGRAM MINI-CANDLE BACKGROUND
-    ============================ */
+    /* ============================================
+       LAYER 1 — Mini Candle Hologram Background
+    ============================================= */
     .bg-candles {
         position: absolute;
         inset: 0;
-        background-image: url('https://i.imgur.com/CKQxRsv.png');
+        background-image: url('https://files.catbox.moe/1tj9nh.png');
         background-repeat: repeat;
-        background-size: 780px auto; /* smaller for hologram look */
-        opacity: 0.20;
-        filter: brightness(1.15) saturate(1.15);
+        background-size: 780px auto;
+        opacity: 0.22;
+        filter: brightness(1.20) saturate(1.15);
         animation: slideCandles 45s linear infinite;
-        z-index: 0;
+        z-index: 1;
     }
 
     @keyframes slideCandles {
@@ -40,9 +40,46 @@
         to { background-position: -1500px 0; }
     }
 
-    /* ============================
-       PREMIUM HOLOGRAM LOGIN BOX
-    ============================ */
+    /* ============================================
+       LAYER 2 — Hologram Noise Film
+    ============================================= */
+    .noise-film {
+        position: absolute;
+        inset: 0;
+        background-image: url('https://files.catbox.moe/x0amg1.png'); 
+        opacity: 0.07;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        animation: noiseMove 0.8s steps(2) infinite;
+        z-index: 2;
+    }
+
+    @keyframes noiseMove {
+        0% { transform: translate(0,0); }
+        100% { transform: translate(-2%, -2%); }
+    }
+
+    /* ============================================
+       LAYER 3 — Neon Pulse Glow
+    ============================================= */
+    .neon-pulse {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 50%, rgba(0,255,255,0.08), transparent 60%);
+        animation: pulse 6s ease-in-out infinite;
+        z-index: 3;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 0.04; }
+        50% { opacity: 0.12; }
+        100% { opacity: 0.04; }
+    }
+
+    /* ============================================
+       LOGIN CONTAINER (ELITE HOLOGRAM)
+    ============================================= */
     .container {
         z-index: 10;
         width: 90%;
@@ -52,7 +89,9 @@
         border-radius: 22px;
         padding: 38px;
         backdrop-filter: blur(16px);
-        box-shadow: 0 0 30px rgba(0,255,255,0.20), 0 0 40px rgba(180,0,255,0.15);
+        box-shadow: 
+            0 0 30px rgba(0,255,255,0.20),
+            0 0 40px rgba(180,0,255,0.15);
         animation: fadeUp 1s ease;
         text-align: center;
     }
@@ -114,8 +153,12 @@
 
 <body>
 
+<!-- HOLOGRAM BACKGROUND LAYERS -->
 <div class="bg-candles"></div>
+<div class="noise-film"></div>
+<div class="neon-pulse"></div>
 
+<!-- LOGIN UI -->
 <div class="container">
     <h2>Abrox AI Login</h2>
     <input id="uidInput" type="text" placeholder="Enter your UID">
@@ -134,13 +177,16 @@ async function verify() {
     }
 
     try {
-        const subs = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json").then(r => r.json());
+        const subsResp = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json");
+        const subs = await subsResp.json();
+
         if (!subs[uid]) {
             alert("UID not found.");
             return;
         }
 
-        const envText = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env").then(r => r.text());
+        const envResp = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env");
+        const envText = await envResp.text();
         const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
 
         if (!match) {
@@ -155,7 +201,7 @@ async function verify() {
 
         window.location.href = "dashboard.html?uid=" + uid;
 
-    } catch {
+    } catch (err) {
         alert("Connection error.");
     }
 }
