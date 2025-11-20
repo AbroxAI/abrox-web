@@ -5,18 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>ABROX AI — Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --bg:#030313;
-    --panel-bg: rgba(6,8,20,0.38);
-    --glass-edge: rgba(255,255,255,0.06);
-    --muted: rgba(255,255,255,0.65);
+    /* NEW FINTECH NEON THEME */
+    --bg1:#02041b;
+    --bg2:#03031a;
+    --panel-bg: rgba(10,12,28,0.45);
+    --glass-edge: rgba(255,255,255,0.08);
+    --muted: rgba(255,255,255,0.75);
+    --cyan:#00eaff;
+    --purple:#c400ff;
   }
 
   html,body{
     height:100%;
     margin:0;
-    background:var(--bg);
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));
     font-family:"Poppins",system-ui;
     color:#fff;
     overflow:hidden;
@@ -25,7 +30,6 @@
   #scene { position:fixed; inset:0; z-index:0; }
   canvas { width:100%; height:100%; display:block; }
 
-  /* CLEAN CENTER LOGIN PANEL */
   main.panel {
     position:absolute;
     left:50%; top:50%;
@@ -34,24 +38,25 @@
     width:100%;
     max-width:520px;
     padding:34px;
-    border-radius:20px;
+    border-radius:22px;
     background:var(--panel-bg);
     border:1px solid var(--glass-edge);
-    backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.25);
     text-align:center;
-    box-shadow:0 10px 60px rgba(2,8,20,0.6);
+    box-shadow:0 12px 70px rgba(0,0,0,0.55);
   }
 
   .title{
-    font-size:28px;
+    font-size:30px;
     font-weight:800;
-    margin-bottom:10px;
-    color:#ffffff; /* CLEAN TEXT */
+    margin-bottom:8px;
+    color:var(--cyan);
+    text-shadow:0 0 16px rgba(0,238,255,0.55);
   }
 
   .sub{
     font-size:13px;
-    color:rgba(255,255,255,0.66);
+    color:var(--muted);
     margin-bottom:20px;
   }
 
@@ -59,24 +64,51 @@
     width:100%;
     padding:14px 16px;
     border-radius:12px;
-    border:1px solid rgba(255,255,255,0.04);
-    background:rgba(8,10,20,0.48);
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(12,14,26,0.55);
     margin-top:12px;
-    color:#e6fbff;
+    color:#dffaff;
     font-size:15px;
+    outline:none;
+    backdrop-filter:blur(8px);
+  }
+
+  /* Password wrapper (for eye icon) */
+  .password-wrap{
+    position:relative;
+    width:100%;
+  }
+
+  #togglePassword{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#aaa;
+    font-size:15px;
+    user-select:none;
   }
 
   .btn{
     width:100%;
-    margin-top:18px;
+    margin-top:22px;
     padding:13px;
-    border-radius:12px;
+    border-radius:14px;
     border:none;
     font-weight:800;
     font-size:16px;
     cursor:pointer;
-    color:#041224;
-    background:#d9deff;
+    background:var(--purple);
+    color:#fff;
+    text-shadow:0 0 8px rgba(255,255,255,0.4);
+    box-shadow:
+      0 0 12px rgba(196,0,255,0.6),
+      0 0 32px rgba(196,0,255,0.45);
+  }
+
+  .btn:active{
+    transform:scale(0.97);
   }
 
   .hint{
@@ -89,22 +121,26 @@
 
 <body>
 
-<div id="scene" aria-hidden="true">
+<div id="scene">
   <canvas id="candlesCanvas"></canvas>
 </div>
 
-<main class="panel" id="uiPanel">
-  <h1 class="title">Abrox AI Login</h1>
+<main class="panel">
+  <h1 class="title">ABROX AI Login</h1>
   <div class="sub">Enter your UID and dashboard password.</div>
 
   <input id="uidInput" class="field" type="text" placeholder="Enter your UID" />
-  <input id="passInput" class="field" type="password" placeholder="Dashboard Password" />
+
+  <div class="password-wrap">
+    <input id="passInput" class="field" type="password" placeholder="Dashboard Password" />
+    <span id="togglePassword">👁️</span>
+  </div>
 
   <button class="btn" id="loginBtn">LOGIN</button>
-  <div class="hint">Secure • Encrypted • Clean Interface</div>
+  <div class="hint">Secure • Encrypted • Neon Fintech</div>
 </main>
 
-<!-- Background Candles -->
+<!-- Neon Mixed Glow Candles -->
 <script>
 (() => {
   const canvas = document.getElementById('candlesCanvas');
@@ -167,18 +203,23 @@
         const flick = (Math.sin(t*2 + cd.seed)*0.45 + fastNoise(t*1.4 + cd.seed)*0.35)
                        * (0.6 + cd.flickOff*0.8);
 
-        const h = cd.baseHeight + flick*18;
+        const h = cd.baseHeight + flick*22;
         const x = cd.x + parX*((c/cols)-0.5)*0.7;
         const y = cd.z + parY*((r/rows)-0.5)*0.6;
 
         ctx.save();
-        ctx.globalAlpha = 0.08;
-        ctx.fillStyle = "#00eaff";
+        ctx.globalAlpha = 0.10;
+
+        const gradient = ctx.createLinearGradient(x, y-h, x, y);
+        gradient.addColorStop(0, "rgba(0,238,255,0.85)");
+        gradient.addColorStop(1, "rgba(196,0,255,0.85)");
+
+        ctx.fillStyle = gradient;
         ctx.fillRect(x - cd.width/2, y - h, cd.width, h);
+
         ctx.restore();
       }
     }
-
     requestAnimationFrame(draw);
   }
   draw();
@@ -217,6 +258,18 @@ async function verify(){
 }
 
 document.getElementById("loginBtn").addEventListener("click", verify);
+
+/* Show/Hide password */
+document.getElementById("togglePassword").addEventListener("click", function () {
+  const pass = document.getElementById('passInput');
+  if(pass.type === "password"){
+    pass.type = "text";
+    this.textContent = "🙈";
+  } else {
+    pass.type = "password";
+    this.textContent = "👁️";
+  }
+});
 </script>
 
 </body>
