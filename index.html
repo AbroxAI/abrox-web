@@ -4,64 +4,74 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>ABROX AI — Elite Login (Hologram Candles)</title>
+
 <style>
   :root{
-    --bg:#040414;
-    --panel-bg: rgba(2,4,12,0.64);
-    --glass-edge: rgba(255,255,255,0.06);
-    --accent1: #00eaff;
-    --accent2: #b300ff;
-    --btn-grad: linear-gradient(90deg,#ff00f7,#b300ff);
+    --bg:#030313;
+    --panel-bg: rgba(4,6,18,0.55);
+    --glass-edge: rgba(255,255,255,0.09);
+    --accent1:#00eaff;
+    --accent2:#b300ff;
   }
 
-  html,body{height:100%;margin:0;background:var(--bg);font-family:"Poppins",system-ui,Arial;color:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
-  body{min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+  html,body{
+    height:100%; margin:0; background:var(--bg);
+    font-family:"Poppins",system-ui,Arial; color:#fff;
+  }
 
-  /* HOLOGRAM BACKGROUND */
-  .holo-wrap{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  body{
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; position:relative;
+  }
 
-  /* 🔥 FIXED — HIGH VISIBILITY CANDLES */
+  /* -------------------------------------------------------
+     ULTRA HOLOGRAM CANDLES (UPGRADED)
+  ------------------------------------------------------- */
+  .holo-wrap{position:absolute; inset:0; z-index:0; overflow:hidden;}
+
   .candle-layer{
-    position:absolute;top:50%;left:50%;
-    width:240%;height:170%;
+    position:absolute;
+    top:50%; left:50%;
+    width:260%; height:180%;
     transform:translate(-50%,-50%);
-    background-image: url('https://files.catbox.moe/1tj9nh.png');
-    background-repeat: repeat;
-    background-size: 720px auto;
-    filter: saturate(1.3) brightness(1.25) contrast(1.1);
-    opacity:0.35;                      /* increased from 0.14 → FIX */
-    animation: candleMove 48s linear infinite;
+    background-image:url("https://files.catbox.moe/1tj9nh.png");
+    background-repeat:repeat;
+    background-size:820px auto;
+    filter:saturate(1.45) brightness(1.28) contrast(1.18);
+    opacity:0.38;
+    animation:candleMove 45s linear infinite;
   }
 
   .candle-layer.back{
-    width:280%;height:190%;
-    background-size: 1000px auto;
-    opacity:0.22;                      /* increased from 0.08 → FIX */
-    filter: saturate(1.1) brightness(1.15) contrast(1.05);
-    animation: candleMoveBack 75s linear infinite;
-    transform:translate(-50%,-50%) scale(1.03);
+    width:300%; height:200%;
+    background-size:1080px auto;
+    opacity:0.26;
+    filter:saturate(1.2) brightness(1.15) contrast(1.09);
+    transform:translate(-50%,-50%) scale(1.035);
+    animation:candleMoveBack 75s linear infinite;
   }
 
-  @keyframes candleMove {
+  @keyframes candleMove{
     from{transform:translate(-50%,-50%)}
-    to{transform:translate(calc(-50% - 480px),-50%)}
-  }
-  @keyframes candleMoveBack {
-    from{transform:translate(-50%,-50%) scale(1.03)}
-    to{transform:translate(calc(-50% - 760px),-50%) scale(1.03)}
+    to{transform:translate(calc(-50% - 540px),-50%)}
   }
 
+  @keyframes candleMoveBack{
+    from{transform:translate(-50%,-50%) scale(1.035)}
+    to{transform:translate(calc(-50% - 820px),-50%) scale(1.035)}
+  }
+
+  /* layered glow + noise */
   .holo-veil{
-    position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(0,4,10,0.55), rgba(0,4,8,0.65), rgba(0,0,0,0.78));
-    z-index:1;
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg,rgba(0,4,12,0.48),rgba(0,4,10,0.66),rgba(0,0,0,0.78));
   }
 
   .noise-film{
-    position:absolute;inset:0;
-    background-image:url('https://files.catbox.moe/x0amg1.png');
-    opacity:0.08;mix-blend-mode:overlay;z-index:2;
-    animation:noiseShift .9s steps(2) infinite;
+    position:absolute; inset:0; z-index:2;
+    background-image:url("https://files.catbox.moe/x0amg1.png");
+    opacity:0.09; mix-blend-mode:overlay;
+    animation:noiseShift .82s steps(2) infinite;
   }
 
   @keyframes noiseShift{
@@ -70,61 +80,108 @@
   }
 
   .neon-pulse{
-    position:absolute;inset:0;z-index:3;
+    position:absolute; inset:0; z-index:3;
     background:
-      radial-gradient(40% 30% at 20% 25%, rgba(0,230,255,0.05),transparent),
-      radial-gradient(50% 28% at 82% 70%, rgba(179,0,255,0.04),transparent);
-    filter:blur(30px);
-    animation:pulseSoft 8s ease-in-out infinite;
+      radial-gradient(40% 30% at 15% 25%, rgba(0,240,255,.08), transparent),
+      radial-gradient(50% 32% at 85% 75%, rgba(185,0,255,.07), transparent);
+    filter:blur(40px);
+    animation:pulseSoft 9s ease-in-out infinite;
   }
-  @keyframes pulseSoft{0%{opacity:.04}50%{opacity:.1}100%{opacity:.04}}
 
+  @keyframes pulseSoft{
+    0%{opacity:.05}
+    50%{opacity:.12}
+    100%{opacity:.05}
+  }
+
+  /* -------------------------------------------------------
+     PANEL (UPGRADED GLASS)
+  ------------------------------------------------------- */
   .panel{
-    position:relative;z-index:6;width:92%;max-width:440px;padding:36px;border-radius:20px;
-    background:var(--panel-bg);border:1px solid var(--glass-edge);
-    box-shadow:0 10px 60px rgba(0,0,0,.6),0 6px 30px rgba(0,0,0,.35);
-    backdrop-filter: blur(12px) saturate(1.05);
-    -webkit-backdrop-filter: blur(12px) saturate(1.05);
+    position:relative; z-index:6;
+    width:92%; max-width:440px;
+    padding:40px; border-radius:22px;
+    background:var(--panel-bg);
+    border:1px solid var(--glass-edge);
+    backdrop-filter:blur(14px) saturate(1.2);
+    box-shadow:
+      0 0 25px rgba(0,230,255,0.08),
+      0 0 45px rgba(179,0,255,0.09),
+      0 8px 50px rgba(0,0,0,0.55);
     text-align:center;
   }
 
   .title{
-    font-size:30px;font-weight:800;margin:0 0 18px 0;
-    background:linear-gradient(90deg,#00f0ff,#7fe9ff,#b500ff);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    font-size:32px; font-weight:800; margin:0 0 20px 0;
+    background:linear-gradient(90deg,#00f0ff,#65e4ff,#c300ff);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:0.5px;
   }
 
   .pro-prompt{
-    font-size:12px;color:rgba(255,255,255,0.58);
-    margin-top:-6px;margin-bottom:18px;line-height:1.45;
+    font-size:13px; line-height:1.5;
+    color:rgba(255,255,255,0.6);
+    margin-bottom:20px;
   }
 
-  .field-wrap{position:relative;width:100%;margin-top:14px;}
+  /* -------------------------------------------------------
+     FIELDS
+  ------------------------------------------------------- */
+  .field-wrap{position:relative; width:100%; margin-top:16px;}
+
   .field{
-    width:100%;display:block;background:rgba(6,8,18,0.7);
-    border:1px solid rgba(0,230,255,0.12);
-    padding:14px 16px;border-radius:12px;color:#dfeffd;font-size:15px;box-sizing:border-box;
+    width:100%; padding:15px 16px;
+    background:rgba(6,8,18,0.75);
+    border:1px solid rgba(0,230,255,0.14);
+    border-radius:14px; font-size:16px;
+    color:#e7f7ff; box-sizing:border-box;
+    transition:border .18s, background .18s;
   }
-  .field::placeholder{color:rgba(200,220,230,0.42)}
 
+  .field:focus{
+    outline:none;
+    border-color:#00eaff;
+    background:rgba(12,16,30,0.85);
+  }
+
+  .field::placeholder{color:rgba(210,230,255,0.42);}
+
+  /* password eye */
   .eye{
-    position:absolute;right:14px;top:50%;
+    position:absolute; right:14px; top:50%;
     transform:translateY(-50%);
-    width:22px;height:22px;cursor:pointer;
-    opacity:0.6;transition:.15s;
+    width:22px; height:22px; cursor:pointer;
+    opacity:0.65; transition:.15s;
   }
   .eye:hover{opacity:1;}
 
+  /* -------------------------------------------------------
+     LOGIN BUTTON (UPGRADED)
+  ------------------------------------------------------- */
   .btn{
-    margin-top:22px;padding:14px;border-radius:14px;border:none;width:100%;
-    font-weight:800;font-size:18px;color:#fff;cursor:pointer;
-    background: linear-gradient(90deg, rgba(255,0,247,0.98), rgba(179,0,255,0.98));
-    box-shadow:0 8px 30px rgba(179,0,255,0.14);
+    margin-top:26px; padding:15px;
+    width:100%; border:none; border-radius:16px;
+    font-size:19px; font-weight:800; color:#fff;
+    cursor:pointer;
+    background:linear-gradient(90deg,#ff00f7,#b300ff,#7a00ff);
+    background-size:180%;
+    animation:btnPulse 6s ease-in-out infinite;
+    box-shadow:0 10px 40px rgba(179,0,255,0.22);
   }
 
-  @media(max-width:420px){.title{font-size:24px}.panel{padding:24px}}
+  @keyframes btnPulse{
+    0%{background-position:0%}
+    50%{background-position:100%}
+    100%{background-position:0%}
+  }
+
+  @media(max-width:420px){
+    .title{font-size:26px}
+    .panel{padding:28px}
+  }
 </style>
 </head>
+
 <body>
 
 <div class="holo-wrap">
@@ -144,13 +201,13 @@
   </div>
 
   <div class="field-wrap">
-    <input id="uidInput" class="field" type="text" placeholder="Enter your UID" autocomplete="username"/>
+    <input id="uidInput" class="field" type="text" placeholder="Enter your UID" />
   </div>
 
   <div class="field-wrap">
-    <input id="passInput" class="field" type="password" placeholder="Dashboard Password" autocomplete="current-password"/>
+    <input id="passInput" class="field" type="password" placeholder="Dashboard Password" />
     <svg class="eye" onclick="togglePass()" viewBox="0 0 24 24">
-      <path fill="#cfe7ff" d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 .001-8.001A4 4 0 0 1 12 16z"/>
+      <path fill="#dff6ff" d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 .001-8.001A4 4 0 0 1 12 16z"/>
     </svg>
   </div>
 
@@ -160,7 +217,7 @@
 <script>
 function togglePass(){
   const p = document.getElementById("passInput");
-  p.type = (p.type === "password") ? "text" : "password";
+  p.type = p.type === "password" ? "text" : "password";
 }
 
 function showAlert(m){ alert(m); }
@@ -168,7 +225,8 @@ function showAlert(m){ alert(m); }
 async function verify(){
   const uid = uidInput.value.trim();
   const pass = passInput.value.trim();
-  if(!uid || !pass){ return showAlert("Enter UID and Password"); }
+
+  if(!uid || !pass) return showAlert("Enter UID and Password");
 
   try{
     const s = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json",{cache:"no-store"});
@@ -181,8 +239,8 @@ async function verify(){
     const envText = await e.text();
     const m = envText.match(/DASHBOARD_PASSWORD=(.*)/);
     if(!m) return showAlert("Password config missing.");
-    const correct = m[1].trim();
 
+    const correct = m[1].trim();
     if(pass !== correct) return showAlert("Incorrect password.");
 
     window.location.href = "dashboard.html?uid="+encodeURIComponent(uid);
