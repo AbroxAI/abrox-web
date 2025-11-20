@@ -51,7 +51,6 @@
     margin-bottom:25px;
   }
 
-  /* Neon Select Box */
   .select-box{
     width:100%;
     margin-bottom:16px;
@@ -82,7 +81,6 @@
     border-color:#ff00f7;
   }
 
-  /* Start button */
   .start-btn{
     width:100%;
     padding:18px;
@@ -103,7 +101,6 @@
     box-shadow:0 0 38px rgba(255,0,255,0.55);
   }
 
-  /* Signal boxes */
   .signals{
     display:flex;
     gap:18px;
@@ -141,7 +138,6 @@
     text-shadow:0 0 16px rgba(255,0,0,0.25);
   }
 
-  /* ------------------- NEON PREMIUM MODAL ------------------- */
   .modal-backdrop{
     position:fixed;
     inset:0;
@@ -249,7 +245,6 @@
   <div class="order-text">OPEN ORDER LOWER</div>
 </div>
 
-<!-- Neon Modal -->
 <div class="modal-backdrop" id="modalBg">
   <div class="modal">
     <h3>Activate Premium Signals — 100 USDT</h3>
@@ -283,11 +278,39 @@
   };
 
   modal.onclick = (e) => {
-    if(e.target === modal){
+    if (e.target === modal) {
       modal.style.display = "none";
       document.body.style.overflow = "";
     }
   };
+
+  // -------- LIVE PERCENTAGE ENGINE --------
+  const upEl = document.getElementById("pctUp");
+  const downEl = document.getElementById("pctDown");
+  const orderText = document.querySelector(".order-text");
+
+  function updateSignals() {
+    let up = (Math.random() * 60) + 10; // 10–70%
+    up = Math.round(up * 10) / 10;
+    let down = 100 - up;
+    down = Math.round(down * 10) / 10;
+
+    upEl.textContent = up + "%";
+    downEl.textContent = down + "%";
+
+    if (up > down) {
+      orderText.textContent = "OPEN ORDER HIGHER";
+      orderText.style.color = "#00ff9f";
+      orderText.style.textShadow = "0 0 16px rgba(0,255,159,0.35)";
+    } else {
+      orderText.textContent = "OPEN ORDER LOWER";
+      orderText.style.color = "#ff3838";
+      orderText.style.textShadow = "0 0 16px rgba(255,0,0,0.35)";
+    }
+  }
+
+  setInterval(updateSignals, 1200);
+  updateSignals();
 </script>
 
 </body>
