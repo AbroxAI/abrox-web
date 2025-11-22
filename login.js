@@ -1,11 +1,11 @@
-// login.js
-// Externalized login logic for ABROX AI login page
-// Keep this file in the same directory as index.html (GitHub root of the page).
+// === FINAL LOGIN.JS (RAW LINKS, NO CACHE ISSUES) ===
+// Works instantly with GitHub Pages + your index.html
 
-// Helper references
 const uidInput = document.getElementById('uidInput');
 const passInput = document.getElementById('passInput');
 const loginBtn = document.getElementById('loginBtn');
+const togglePassword = document.getElementById('togglePassword');
+
 const mainPanel = document.getElementById('mainPanel');
 const badge = document.getElementById('badge');
 const badgeIcon = document.getElementById('badgeIcon');
@@ -13,7 +13,6 @@ const badgeHead = document.getElementById('badgeHead');
 const badgeSub = document.getElementById('badgeSub');
 const ring = document.getElementById('ring');
 const burst = document.getElementById('burst');
-const togglePassword = document.getElementById('togglePassword');
 
 function clearVerifyUI(){
   badge.className = 'badge';
@@ -32,9 +31,8 @@ function spawnParticles(color, count=18){
     p.className='particle';
     p.style.background=color;
 
-    // start near center
-    p.style.left = '50%';
-    p.style.top = '50%';
+    p.style.left='50%';
+    p.style.top='50%';
     burst.appendChild(p);
 
     const angle=Math.random()*Math.PI*2;
@@ -57,13 +55,12 @@ function showSuccess(h='ACCESS VERIFIED', s='Identity Matched • Redirecting…
   badgeHead.textContent=h;
   badgeSub.textContent=s;
 
-  // make success green for clarity
-  ring.style.background='rgba(20,255,185,0.18)'; // soft green ring
+  ring.style.background='rgba(20,255,185,0.18)';
   ring.classList.add('show');
   mainPanel.classList.add('success');
 
-  spawnParticles('rgba(20,255,185,0.95)',10); // green particles
-  spawnParticles('rgba(0,238,255,0.9)',8);   // cyan accent particles
+  spawnParticles('rgba(20,255,185,0.95)',10);
+  spawnParticles('rgba(0,238,255,0.9)',8);
 
   setTimeout(()=>badge.classList.add('show'),80);
 }
@@ -84,8 +81,8 @@ function showFail(h='ACCESS DENIED', s='Credentials Incorrect'){
 }
 
 async function verify(){
-  const uid = (uidInput && uidInput.value || '').trim();
-  const pass = (passInput && passInput.value || '').trim();
+  const uid = uidInput.value.trim();
+  const pass = passInput.value.trim();
 
   if(!uid || !pass){
     showFail('MISSING','Enter UID & Password');
@@ -94,53 +91,57 @@ async function verify(){
   }
 
   try{
-    // subscribers.json (checks UID)
-    const s = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json",{cache:"no-store"});
-    if(!s.ok) return showFail('NETWORK','Failed to load subscribers');
+    // --- Always load fresh RAW JSON ---
+    const subsRes = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json?now="+Date.now());
+    if(!subsRes.ok) return showFail('NETWORK','subscribers.json error');
 
-    const subs = await s.json();
+    const subs = await subsRes.json();
+
     if(!subs[uid]){
       showFail('ACCESS DENIED','UID not found');
       setTimeout(clearVerifyUI,1400);
       return;
     }
 
-    // config.env (formerly .env) — fetch password
-    const e = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/config.env",{cache:"no-store"});
-    if(!e.ok) return showFail('NETWORK','Failed to load config');
+    // --- Load config.env from RAW ---
+    const envRes = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/config.env?now="+Date.now());
+    if(!envRes.ok) return showFail('NETWORK','config.env error');
 
-    const envText = await e.text();
-    const m = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-    if(!m) return showFail('CONFIG','Password missing');
+    const envText = await envRes.text();
+    const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
 
-    const correct = m[1].trim();
+    if(!match){
+      showFail('CONFIG','Password missing in config');
+      setTimeout(clearVerifyUI,1400);
+      return;
+    }
 
-    if(pass !== correct){
+    const correctPass = match[1].trim();
+
+    if(pass !== correctPass){
       showFail('ACCESS DENIED','Incorrect password');
       setTimeout(clearVerifyUI,1400);
       return;
     }
 
-    // success
+    // SUCCESS
     showSuccess();
     setTimeout(()=>location.href="dashboard.html",1200);
 
   }catch(err){
-    console.error('verify error', err);
+    console.error(err);
     showFail('ERROR','Unexpected issue');
     setTimeout(clearVerifyUI,1600);
   }
 }
 
-// wire up events
-if(loginBtn) loginBtn.addEventListener("click", verify);
-if(togglePassword){
-  togglePassword.onclick = () => {
-    if(!passInput) return;
-    passInput.type = passInput.type === "password" ? "text" : "password";
-  };
-}
+// EVENTS
+loginBtn.addEventListener("click", verify);
 
-// allow Enter key to submit while focused on fields
-if(uidInput) uidInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') verify(); });
-if(passInput) passInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') verify(); });
+togglePassword.addEventListener("click", () => {
+  passInput.type = passInput.type === "password" ? "text" : "password";
+});
+
+// allow enter
+uidInput.addEventListener("keydown", e => { if(e.key === "Enter") verify(); });
+passInput.addEventListener("keydown", e => { if(e.key === "Enter") verify(); });
