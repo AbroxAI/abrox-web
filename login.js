@@ -1,5 +1,5 @@
-// === FINAL LOGIN.JS (RAW LINKS, NO CACHE ISSUES) ===
-// Works instantly with GitHub Pages + your index.html
+/* === ABROX AI — FINAL LOGIN SYSTEM (GITHUB PAGES SAFE) === */
+/* Uses RAW JSON only — env files are blocked by GitHub */
 
 const uidInput = document.getElementById('uidInput');
 const passInput = document.getElementById('passInput');
@@ -91,7 +91,7 @@ async function verify(){
   }
 
   try{
-    // --- Always load fresh RAW JSON ---
+    // --- Load subscribers.json fresh ---
     const subsRes = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json?now="+Date.now());
     if(!subsRes.ok) return showFail('NETWORK','subscribers.json error');
 
@@ -103,20 +103,12 @@ async function verify(){
       return;
     }
 
-    // --- Load config.env from RAW ---
-    const envRes = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/config.env?now="+Date.now());
-    if(!envRes.ok) return showFail('NETWORK','config.env error');
+    // --- Load config.json fresh ---
+    const configRes = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/config.json?now="+Date.now());
+    if(!configRes.ok) return showFail('NETWORK','config.json error');
 
-    const envText = await envRes.text();
-    const match = envText.match(/DASHBOARD_PASSWORD=(.*)/);
-
-    if(!match){
-      showFail('CONFIG','Password missing in config');
-      setTimeout(clearVerifyUI,1400);
-      return;
-    }
-
-    const correctPass = match[1].trim();
+    const config = await configRes.json();
+    const correctPass = config.DASHBOARD_PASSWORD;
 
     if(pass !== correctPass){
       showFail('ACCESS DENIED','Incorrect password');
@@ -142,6 +134,5 @@ togglePassword.addEventListener("click", () => {
   passInput.type = passInput.type === "password" ? "text" : "password";
 });
 
-// allow enter
 uidInput.addEventListener("keydown", e => { if(e.key === "Enter") verify(); });
 passInput.addEventListener("keydown", e => { if(e.key === "Enter") verify(); });
