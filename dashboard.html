@@ -9,30 +9,24 @@
 
 <script>
 // --------------------------------------------------
-// CONFIG.ENV LOADER
+// CONFIG.JSON LOADER  (FIXED — GitHub Pages compatible)
 // --------------------------------------------------
 window.ABROX = {};
 
 async function loadConfig() {
   try {
-    const res = await fetch("config.env");
-    const text = await res.text();
-    text.split("\n").forEach(line => {
-      if (!line.includes("=")) return;
-      const [key, val] = line.split("=");
-      window.ABROX[key.trim()] = val.trim();
-    });
+    const res = await fetch("config.json?now=" + Date.now());
+    const json = await res.json();
+    window.ABROX = json;
 
     // Apply config to Dashboard
     applyConfig();
   } catch (e) {
-    console.warn("config.env not loaded", e);
+    console.warn("config.json not loaded", e);
   }
 }
 
 function applyConfig() {
-  // Example usage:
-  // Replace Telegram link dynamically
   const tg = document.getElementById("payLink");
   if (tg && ABROX.TG_BOT) {
     tg.href = ABROX.TG_BOT;
@@ -323,7 +317,7 @@ function applyConfig() {
   const orderText = document.querySelector(".order-text");
 
   function updateSignals() {
-    let up = (Math.random() * 60) + 10; // 10–70%
+    let up = (Math.random() * 60) + 10;
     up = Math.round(up * 10) / 10;
     let down = 100 - up;
     down = Math.round(down * 10) / 10;
