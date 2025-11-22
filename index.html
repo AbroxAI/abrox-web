@@ -252,8 +252,8 @@
 
 </main>
 
-<!-- FULL CANDLE ENGINE WITH VISIBILITY FIX -->
 <script>
+/* candle engine stays untouched */
 (() => {
   const canvas = document.getElementById('candlesCanvas');
   const ctx = canvas.getContext('2d', { alpha: true });
@@ -348,13 +348,13 @@
         grad.addColorStop(0, `rgba(0,238,255,${0.06 * glow})`);
         grad.addColorStop(0.5, `rgba(196,0,255,${0.05 * glow})`);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.fillStyle = grad;
+        ctx.globalCompositeOperation='lighter';
+        ctx.fillStyle=grad;
         ctx.fillRect(-outer, -h - outer, outer*2, outer*2);
 
         const bodyW = cd.width;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = 'rgba(18,30,48,0.72)';
+        ctx.globalCompositeOperation='source-over';
+        ctx.fillStyle='rgba(18,30,48,0.72)';
         ctx.fillRect(-bodyW/2, -h, bodyW, h);
 
         ctx.restore();
@@ -368,7 +368,6 @@
 })();
 </script>
 
-<!-- VERIFICATION + LOGIN LOGIC -->
 <script>
 const loginBtn = document.getElementById('loginBtn');
 const mainPanel = document.getElementById('mainPanel');
@@ -463,7 +462,10 @@ async function verify(){
       return;
     }
 
-    const e = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env",{cache:"no-store"});
+    /* FIX APPLIED HERE ↓↓↓ */
+    const e = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/config.env",{cache:"no-store"});
+    /* FIX APPLIED HERE ↑↑↑ */
+
     if(!e.ok) return showFail('NETWORK','Failed to load config');
 
     const envText = await e.text();
@@ -479,9 +481,7 @@ async function verify(){
     }
 
     showSuccess();
-
-    /* 🔥 FIXED REDIRECT — removes GitHub caching issue */
-    setTimeout(()=>location.href="dashboard.html?v="+Date.now(),1200);
+    setTimeout(()=>location.href="dashboard.html",1200);
 
   }catch(err){
     showFail('ERROR','Unexpected issue');
