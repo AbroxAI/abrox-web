@@ -2,315 +2,494 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Abrox AI — Dashboard (Neon Pro)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ABROX AI — Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#030617;
-    --neon:#ff00f7;
-    --neon2:#b300ff;
-    --green:#00ff9f;
-    --green-dark:#009d62;
-    --red:#ff4c4c;
-    --red-dark:#b30000;
+    --bg1:#02041b;
+    --bg2:#03031a;
+    --panel-bg: rgba(10,12,28,0.45);
+    --glass-edge: rgba(255,255,255,0.08);
+    --muted: rgba(255,255,255,0.75);
+
+    --cyan:#00eaff;
+    --purple:#c400ff;
+    --gold:#ffd36b;
+    --fail-red:#ff3b3b;
+
+    --btn-core: #c400ff;
+    --btn-bloom: #ff4cff;
+    --btn-aura: rgba(80,200,255,0.18);
   }
 
-  body{
+  html,body{
+    height:100%;
     margin:0;
-    font-family:"Poppins",sans-serif;
-    background: radial-gradient(circle at 30% 20%, #051433, #020414 45%, #000212 100%);
+    background:#02041b;
+    font-family:"Poppins",system-ui;
     color:#fff;
-    height:100vh;
-    padding:20px;
+    overflow:hidden;
   }
 
-  .wrap{
+  #scene { 
+    position:fixed; 
+    inset:0; 
+    z-index:0; 
+    pointer-events:none;
+    background: radial-gradient(circle at bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.65));
+  }
+
+  canvas { 
+    width:100%; 
+    height:100%; 
+    display:block; 
+    mix-blend-mode:screen;
+  }
+
+  main.panel {
+    position:absolute;
+    left:50%; top:48%;
+    transform:translate(-50%,-50%);
+    z-index:10;
+    width:100%;
     max-width:520px;
-    margin:0 auto;
-    padding-top:20px;
+    padding:34px;
+    border-radius:22px;
+    background:var(--panel-bg);
+    border:1px solid var(--glass-edge);
+    backdrop-filter: blur(14px) saturate(1.25);
+    text-align:center;
+    box-shadow:0 18px 80px rgba(0,0,0,0.6);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+
+  main.panel.shake {
+    animation: panelShake .48s cubic-bezier(.36,.07,.19,.97);
+  }
+
+  @keyframes panelShake {
+    10%, 90% { transform: translate(-50%, -50%) translateX(-1px); }
+    20%, 80% { transform: translate(-50%, -50%) translateX(2px); }
+    30%, 50%, 70% { transform: translate(-50%, -50%) translateX(-4px); }
+    40%, 60% { transform: translate(-50%, -50%) translateX(4px); }
   }
 
   .title{
-    font-size:32px;
+    font-size:30px;
     font-weight:800;
-    text-align:center;
-    margin-bottom:10px;
-    background:linear-gradient(90deg,#00eaff,#6af2ff,#ff00ea,#b300ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 22px rgba(255,0,255,0.3);
+    margin-bottom:8px;
+    color:var(--cyan);
+    text-shadow:0 0 18px rgba(0,238,255,0.5);
   }
 
-  .subtitle{
-    text-align:center;
-    opacity:0.8;
-    font-size:15px;
-    margin-bottom:25px;
+  .sub{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:20px;
   }
 
-  .select-box{
+  .field{
     width:100%;
-    margin-bottom:16px;
-  }
-
-  .select-box label{
-    font-size:14px;
-    opacity:0.85;
-    margin-bottom:6px;
-    display:block;
-  }
-
-  select{
-    width:100%;
-    padding:16px 18px;
-    background:rgba(255,0,255,0.05);
-    border:2px solid rgba(255,0,255,0.4);
-    border-radius:16px;
-    font-size:17px;
-    color:#fff;
-    outline:none;
-    box-shadow:0 0 14px rgba(255,0,255,0.25);
-    backdrop-filter:blur(6px);
-  }
-
-  select:focus{
-    box-shadow:0 0 22px rgba(255,0,255,0.5);
-    border-color:#ff00f7;
-  }
-
-  .start-btn{
-    width:100%;
-    padding:18px;
-    margin:10px 0 22px 0;
-    text-align:center;
-    border-radius:20px;
-    background:linear-gradient(90deg,#ff00ea,#b300ff);
-    border:2px solid rgba(255,0,255,0.4);
-    color:#fff;
-    font-size:22px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 0 28px rgba(255,0,255,0.35), 0 0 12px rgba(255,0,255,0.2);
-    transition:0.2s ease;
-  }
-  .start-btn:hover{
-    transform:translateY(-4px);
-    box-shadow:0 0 38px rgba(255,0,255,0.55);
-  }
-
-  .signals{
-    display:flex;
-    gap:18px;
-    margin-top:10px;
-  }
-
-  .sig-box{
-    flex:1;
-    padding:20px 10px;
-    border-radius:20px;
-    text-align:center;
-    font-size:34px;
-    font-weight:800;
-    box-shadow:0 0 16px rgba(0,0,0,0.5);
-  }
-
-  .green{
-    background:linear-gradient(180deg,var(--green-dark),var(--green));
-    border:3px solid var(--green);
-    color:#eafff7;
-  }
-
-  .red{
-    background:linear-gradient(180deg,var(--red-dark),var(--red));
-    border:3px solid var(--red);
-    color:#fff2f2;
-  }
-
-  .order-text{
-    text-align:center;
-    margin-top:18px;
-    font-size:28px;
-    font-weight:800;
-    color:#ff3838;
-    text-shadow:0 0 16px rgba(255,0,0,0.25);
-  }
-
-  .modal-backdrop{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.65);
-    backdrop-filter:blur(6px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:99;
-  }
-
-  .modal{
-    width:92%;
-    max-width:500px;
-    padding:26px;
-    border-radius:20px;
-    background:rgba(10,0,20,0.92);
-    border:2px solid rgba(255,0,255,0.4);
-    box-shadow:0 0 40px rgba(255,0,255,0.4), 0 0 90px rgba(0,0,0,0.8);
-    animation:pop 0.25s ease;
-  }
-
-  @keyframes pop{
-    from{transform:scale(0.8);opacity:0;}
-    to{transform:scale(1);opacity:1;}
-  }
-
-  .modal h3{
-    margin-top:0;
-    font-size:22px;
-    font-weight:700;
-    background:linear-gradient(90deg,#ff00ea,#b300ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
-
-  .modal p{
-    margin:10px 0 20px 0;
-    opacity:0.9;
-    line-height:1.5;
-  }
-
-  .modal .btn-row{
-    display:flex;
-    justify-content:flex-end;
-    gap:12px;
-    margin-top:6px;
-  }
-
-  .cancel-btn{
-    padding:10px 16px;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.3);
+    padding:14px 16px;
     border-radius:12px;
-    color:#ddd;
-    cursor:pointer;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(12,14,26,0.55);
+    margin-top:12px;
+    color:#dffaff;
+    font-size:15px;
+    outline:none;
+    backdrop-filter:blur(8px);
   }
 
-  .pay-btn{
-    padding:12px 18px;
-    background:linear-gradient(90deg,#ff00ea,#b300ff);
-    color:white;
+  .password-wrap{
+    position:relative;
+    width:100%;
+  }
+
+  #togglePassword{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#aaa;
+    font-size:15px;
+  }
+
+  .btn{
+    width:100%;
+    margin-top:22px;
+    padding:14px;
     border-radius:14px;
-    font-weight:700;
-    text-decoration:none;
-    box-shadow:0 0 22px rgba(255,0,255,0.35);
+    border:none;
+    font-weight:800;
+    font-size:16px;
+    cursor:pointer;
+    color:#fff;
+    position:relative;
+  }
+
+  .btn-core {
+    background: linear-gradient(180deg, var(--btn-core), var(--btn-bloom));
+    box-shadow:0 4px 14px rgba(196,0,255,0.28),
+               0 0 28px rgba(255,76,255,0.18),
+               0 0 60px var(--btn-aura);
+  }
+
+  .btn::before{
+    content:"";
+    position:absolute;
+    left:-12%; top:-30%;
+    width:124%; height:160%;
+    filter:blur(28px);
+    background: radial-gradient(circle, rgba(196,0,255,0.22), rgba(255,76,255,0.08) 40%, transparent 80%);
+    pointer-events:none;
+  }
+
+  .btn::after{
+    content:"";
+    position:absolute;
+    left:-10%; top:-8%;
+    width:120%; height:116%;
+    border-radius:18px;
+    box-shadow:0 0 40px rgba(0,238,255,0.12);
+    pointer-events:none;
+  }
+
+  .btn:active{ transform:translateY(1px) scale(.995); }
+
+  .hint{
+    margin-top:12px;
+    font-size:12px;
+    color:rgba(255,255,255,0.46);
+  }
+
+  .verify-wrap {
+    position: absolute; inset: 0;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+  }
+
+  .badge {
+    min-width:220px;
+    padding:18px 20px;
+    border-radius:14px;
+    background:rgba(6,6,12,0.9);
+    border:1px solid rgba(255,255,255,0.06);
+    display:flex;
+    gap:14px;
+    align-items:center;
+    opacity:0;
+  }
+
+  .badge.show { animation: badgeIn .42s forwards; }
+  @keyframes badgeIn {
+    from { transform:translateY(-14px) scale(.96); opacity:0; }
+    to { transform:translateY(0) scale(1); opacity:1; }
+  }
+
+  .badge.success .icon{
+    background: linear-gradient(135deg, var(--gold), #ffb86b);
+  }
+
+  .badge.fail .icon{
+    background: linear-gradient(135deg, #ff5b5b, #ff3b3b);
+  }
+
+  .burst { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+  .particle { position:absolute; width:8px; height:8px; border-radius:50%; }
+
+  .ring {
+    position:absolute;
+    width:120px; height:120px;
+    border-radius:999px;
+    opacity:0;
+  }
+
+  .ring.show { animation: ringPop .72s forwards; }
+  @keyframes ringPop {
+    0% { transform:scale(.28); opacity:0; filter:blur(6px); }
+    20% { opacity:0.9; }
+    100% { transform:scale(1.3); opacity:0; filter:blur(12px); }
   }
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-  <div class="title">TRADING BOT</div>
-  <div class="subtitle">First select Currency Pair and Timeframe<br>then click Start Signals.</div>
-
-  <div class="select-box">
-    <label>Currency Pair</label>
-    <select id="pair">
-      <option>EUR/USD</option>
-      <option>GBP/JPY</option>
-      <option>USD/JPY</option>
-      <option>AUD/USD</option>
-      <option>GBP/USD</option>
-    </select>
-  </div>
-
-  <div class="select-box">
-    <label>Timeframe</label>
-    <select id="timeframe">
-      <option>1 min</option>
-      <option>2 min</option>
-      <option>5 min</option>
-      <option>10 min</option>
-    </select>
-  </div>
-
-  <button class="start-btn" id="startSignals">Start Signals</button>
-
-  <div class="signals">
-    <div class="sig-box green" id="pctUp">27.8%</div>
-    <div class="sig-box red" id="pctDown">72.2%</div>
-  </div>
-
-  <div class="order-text">OPEN ORDER LOWER</div>
+<div id="scene">
+  <canvas id="candlesCanvas"></canvas>
 </div>
 
-<div class="modal-backdrop" id="modalBg">
-  <div class="modal">
-    <h3>Activate Premium Signals — 100 USDT</h3>
-    <p>
-      To unlock live automated trading signals, activate your one-time
-      <strong>100 USDT</strong> license.<br><br>
-      After payment, tap "Pay & Verify" and upload your proof inside our
-      Telegram bot for instant activation.
-    </p>
+<main class="panel" id="mainPanel">
 
-    <div class="btn-row">
-      <button class="cancel-btn" id="closeModal">Cancel</button>
-      <a class="pay-btn" href="https://t.me/Abrox_Binary_Bot" target="_blank">Pay & Verify</a>
+  <h1 class="title">ABROX AI Login</h1>
+  <div class="sub">Enter your UID and dashboard password.</div>
+
+  <input id="uidInput" class="field" type="text" placeholder="Enter your UID" />
+  <div class="password-wrap">
+    <input id="passInput" class="field" type="password" placeholder="Dashboard Password" />
+    <span id="togglePassword">👁️</span>
+  </div>
+
+  <button class="btn btn-core" id="loginBtn">LOGIN</button>
+
+  <div class="hint">Secure • Encrypted • Neon Fintech</div>
+
+  <div class="verify-wrap">
+    <div id="ring" class="ring"></div>
+    <div id="badge" class="badge">
+      <div class="icon" id="badgeIcon"></div>
+      <div class="text">
+        <div class="head" id="badgeHead"></div>
+        <div class="sub" id="badgeSub"></div>
+      </div>
     </div>
+    <div id="burst" class="burst"></div>
   </div>
-</div>
+
+</main>
 
 <script>
-  const startBtn = document.getElementById("startSignals");
-  const modal = document.getElementById("modalBg");
-  const closeModal = document.getElementById("closeModal");
+(() => {
+  const canvas = document.getElementById('candlesCanvas');
+  const ctx = canvas.getContext('2d', { alpha: true });
 
-  startBtn.onclick = () => {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  };
+  function resize(){
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
 
-  closeModal.onclick = () => {
-    modal.style.display = "none";
-    document.body.style.overflow = "";
-  };
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  let cols=44, rows=12;
+  if(isMobile){ cols=20; rows=8; }
 
-  modal.onclick = (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "";
-    }
-  };
+  const candles=[];
+  const padding=40;
+  let areaW = window.innerWidth - padding*2;
+  let areaH = window.innerHeight - padding*2;
+  const start = performance.now();
 
-  // -------- LIVE PERCENTAGE ENGINE --------
-  const upEl = document.getElementById("pctUp");
-  const downEl = document.getElementById("pctDown");
-  const orderText = document.querySelector(".order-text");
-
-  function updateSignals() {
-    let up = (Math.random() * 60) + 10; // 10–70%
-    up = Math.round(up * 10) / 10;
-    let down = 100 - up;
-    down = Math.round(down * 10) / 10;
-
-    upEl.textContent = up + "%";
-    downEl.textContent = down + "%";
-
-    if (up > down) {
-      orderText.textContent = "OPEN ORDER HIGHER";
-      orderText.style.color = "#00ff9f";
-      orderText.style.textShadow = "0 0 16px rgba(0,255,159,0.35)";
-    } else {
-      orderText.textContent = "OPEN ORDER LOWER";
-      orderText.style.color = "#ff3838";
-      orderText.style.textShadow = "0 0 16px rgba(255,0,0,0.35)";
+  function rebuild(){
+    candles.length = 0;
+    areaW = window.innerWidth - padding*2;
+    areaH = window.innerHeight - padding*2;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const phase = Math.random()*Math.PI*2;
+        candles.push({
+          x: padding + (c+0.5)*(areaW/cols) + (Math.random()-0.5)*6,
+          z: padding + (r+0.5)*(areaH/rows) + (Math.random()-0.5)*6,
+          baseHeight: (areaH * (0.16 + Math.random()*0.44))*(1 - r/(rows*1.15)),
+          width: Math.max(2.2,(areaW/cols)*(0.16+Math.random()*0.28)),
+          seed: Math.random()*1000,
+          phase,
+          speed: 0.4 + Math.random()*1.2,
+          hueShift: Math.random()
+        });
+      }
     }
   }
 
-  setInterval(updateSignals, 1200);
-  updateSignals();
+  rebuild();
+  window.addEventListener('resize', rebuild);
+
+  let pointerX=0,pointerY=0;
+  window.addEventListener("mousemove",e=>{
+    pointerX = (e.clientX / window.innerWidth)*2-1;
+    pointerY = (e.clientY / window.innerHeight)*2-1;
+  });
+
+  function fastNoise(t){
+    return Math.sin(t)*0.5 + Math.sin(t*1.7)*0.25 + Math.sin(t*2.9)*0.15;
+  }
+
+  function draw(){
+    const t = (performance.now() - start)*0.001;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.save();
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = "#02041b";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.restore();
+
+    const parX = pointerX * 18;
+    const parY = pointerY * 10;
+
+    for (let r = rows - 1; r >= 0; r--) {
+      for (let c = 0; c < cols; c++) {
+        const idx = r * cols + c;
+        const cd = candles[idx];
+
+        const flick = (Math.sin(t*cd.speed + cd.seed) * 0.5 + fastNoise(t*0.9 + cd.seed*0.7)*0.3) * 0.9;
+        const move = Math.sin(t*0.6 + cd.phase) * (6 + cd.hueShift*8);
+
+        const h = Math.max(8, cd.baseHeight + flick * 28 + move);
+        const glow = 0.6 + Math.max(0, flick) * 1.6;
+
+        const x = cd.x + parX * ((c/cols)-0.5) * 0.6;
+        const y = cd.z + parY * ((r/rows)-0.5) * 0.45;
+
+        ctx.save();
+        ctx.translate(x, y);
+
+        const outer = Math.max(22, h * 0.6);
+        const grad = ctx.createRadialGradient(0, -h/2, 0, 0, -h/2, outer);
+        grad.addColorStop(0, `rgba(0,238,255,${0.06 * glow})`);
+        grad.addColorStop(0.5, `rgba(196,0,255,${0.05 * glow})`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = grad;
+        ctx.fillRect(-outer, -h - outer, outer*2, outer*2);
+
+        const bodyW = cd.width;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'rgba(18,30,48,0.72)';
+        ctx.fillRect(-bodyW/2, -h, bodyW, h);
+
+        ctx.restore();
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
+
+<script>
+const loginBtn = document.getElementById('loginBtn');
+const mainPanel = document.getElementById('mainPanel');
+const badge = document.getElementById('badge');
+const badgeIcon = document.getElementById('badgeIcon');
+const badgeHead = document.getElementById('badgeHead');
+const badgeSub = document.getElementById('badgeSub');
+const ring = document.getElementById('ring');
+const burst = document.getElementById('burst');
+
+function clearVerifyUI(){
+  badge.className = 'badge';
+  badgeIcon.textContent = '';
+  badgeHead.textContent = '';
+  badgeSub.textContent = '';
+  ring.classList.remove('show');
+  mainPanel.classList.remove('success','shake');
+  burst.innerHTML = '';
+}
+
+function spawnParticles(color, count=18){
+  burst.innerHTML = '';
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.background=color;
+
+    burst.appendChild(p);
+
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*72;
+    const dur=600+Math.random()*420;
+
+    p.animate([
+      { transform:`scale(.6) translate(0,0)`, opacity:1 },
+      { transform:`scale(1) translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`, opacity:0 }
+    ],{ duration:dur, easing:'cubic-bezier(.2,.9,.2,1)' });
+
+    setTimeout(()=>p.remove(),dur+80);
+  }
+}
+
+function showSuccess(h='ACCESS VERIFIED', s='Identity Matched • Redirecting…'){
+  clearVerifyUI();
+  badge.classList.add('show','success');
+  badgeIcon.textContent='✓';
+  badgeHead.textContent=h;
+  badgeSub.textContent=s;
+  ring.style.background='rgba(255,215,107,0.22)';
+  ring.classList.add('show');
+  mainPanel.classList.add('success');
+
+  spawnParticles('rgba(255,215,107,0.95)',10);
+  spawnParticles('rgba(0,238,255,0.95)',10);
+
+  setTimeout(()=>badge.classList.add('show'),80);
+}
+
+function showFail(h='ACCESS DENIED', s='Credentials Incorrect'){
+  clearVerifyUI();
+  badge.classList.add('show','fail');
+  badgeIcon.textContent='✕';
+  badgeHead.textContent=h;
+  badgeSub.textContent=s;
+
+  ring.style.background='rgba(255,59,59,0.22)';
+  ring.classList.add('show');
+  spawnParticles('rgba(255,59,59,0.95)',18);
+  mainPanel.classList.add('shake');
+
+  setTimeout(()=>badge.classList.add('show'),40);
+}
+
+async function verify(){
+  const uid = uidInput.value.trim();
+  const pass = passInput.value.trim();
+
+  if(!uid || !pass){
+    showFail('MISSING','Enter UID & Password');
+    setTimeout(clearVerifyUI,1400);
+    return;
+  }
+
+  try{
+    const s = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/subscribers.json",{cache:"no-store"});
+    if(!s.ok) return showFail('NETWORK','Failed to load subscribers');
+
+    const subs = await s.json();
+    if(!subs[uid]){
+      showFail('ACCESS DENIED','UID not found');
+      setTimeout(clearVerifyUI,1400);
+      return;
+    }
+
+    const e = await fetch("https://raw.githubusercontent.com/AbroxAI/abrox-web/main/.env",{cache:"no-store"});
+    if(!e.ok) return showFail('NETWORK','Failed to load config');
+
+    const envText = await e.text();
+    const m = envText.match(/DASHBOARD_PASSWORD=(.*)/);
+    if(!m) return showFail('CONFIG','Password missing');
+
+    const correct = m[1].trim();
+
+    if(pass !== correct){
+      showFail('ACCESS DENIED','Incorrect password');
+      setTimeout(clearVerifyUI,1400);
+      return;
+    }
+
+    showSuccess();
+
+    /* FIX APPLIED HERE */
+    setTimeout(()=>location.href="dashboard.html?v="+Date.now(),1200);
+
+  }catch(err){
+    showFail('ERROR','Unexpected issue');
+    setTimeout(clearVerifyUI,1600);
+  }
+}
+
+loginBtn.addEventListener("click", verify);
+togglePassword.onclick = () =>
+  passInput.type = passInput.type === "password" ? "text" : "password";
 </script>
 
 </body>
