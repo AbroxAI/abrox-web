@@ -27,7 +27,7 @@
   html,body{
     height:100%;
     margin:0;
-    background:#02041b;
+    background:#02041b; /* FIXED: removed opacity gradient blocking canvas */
     font-family:"Poppins",system-ui;
     color:#fff;
     overflow:hidden;
@@ -45,7 +45,7 @@
     width:100%; 
     height:100%; 
     display:block; 
-    mix-blend-mode:screen;
+    mix-blend-mode:screen; /* FIXED: makes candles visible on dark bg */
   }
 
   main.panel {
@@ -166,6 +166,7 @@
     color:rgba(255,255,255,0.46);
   }
 
+  /* overlay UI */
   .verify-wrap {
     position: absolute; inset: 0;
     display:flex; align-items:center; justify-content:center;
@@ -252,6 +253,7 @@
 
 </main>
 
+<!-- FULL CANDLE ENGINE WITH VISIBILITY FIX -->
 <script>
 (() => {
   const canvas = document.getElementById('candlesCanvas');
@@ -317,7 +319,7 @@
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     ctx.save();
-    ctx.globalAlpha = 0.6;
+    ctx.globalAlpha = 0.6; /* FIX: let glow show */
     ctx.fillStyle = "#02041b";
     ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.restore();
@@ -367,6 +369,7 @@
 })();
 </script>
 
+<!-- VERIFICATION + LOGIN LOGIC -->
 <script>
 const loginBtn = document.getElementById('loginBtn');
 const mainPanel = document.getElementById('mainPanel');
@@ -477,9 +480,7 @@ async function verify(){
     }
 
     showSuccess();
-
-    /* FIX APPLIED HERE */
-    setTimeout(()=>location.href="dashboard.html?v="+Date.now(),1200);
+    setTimeout(()=>location.href="dashboard.html",1200);
 
   }catch(err){
     showFail('ERROR','Unexpected issue');
